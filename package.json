@@ -49,5 +49,8 @@
     "vite": "^3.0.7",
     "vue": "^3.2.37",
     "vue-tsc": "^0.40.1"
+  },
+  "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1"
   }
 }
