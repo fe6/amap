@@ -2,7 +2,7 @@
 
 <template>
   <div class="w-map">
-    <div class="w-map-container" :id="vid"></div>
+    <div class="w-map-container" :id="mapId"></div>
     <slot />
   </div>
 </template>
@@ -10,11 +10,13 @@
 <script lang="ts" setup>
   import type { PropType } from 'vue';
   import { onBeforeMount, onMounted, ref } from 'vue';
-  import { loadMap } from './utils/load';
   import AMapLoader from '@amap/amap-jsapi-loader';
+  import { loadMap } from './utils/load';
+  import { useProvideMap } from './use-map';
+  import { useProvideGaoDeMap } from './use-gaode-map';
 
   const theProps = defineProps({
-    vid: {
+    mapId: {
       type: String,
       default: 'amap',
     },
@@ -76,8 +78,9 @@
 
   const theEmits = defineEmits(['inited', 'init-error']);
 
-  const theMap = ref<any>(null);
-  const theWindow = window as any;
+  const theMap = ref<Record<any, any>>(null);
+  const theGaodeMap = ref<Record<any, any>>(null);
+  const theWindow = window as Record<any, any>;
 
   const setScurity = () => {
     if (!theWindow._AMapSecurityConfig) {
@@ -86,17 +89,16 @@
   };
 
   const initTheMap = async () => {
-    const theAMap: any = await loadMap();
-    console.log(theAMap.Map, 'theMap');
-    console.log(theProps.mapKey, 'theProps.mapKey');
+    const theAMap: Record<any, any> = await loadMap();
+
     if (theProps.mapKey) {
       AMapLoader.load({
         key: theProps.mapKey, // 申请好的Web端开发者Key，首次调用 load 时必填
         version: theProps.version, // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
         plugins: theProps.plugins, // 需要使用的的插件列表，如比例尺'AMap.Scale'等
       })
-        .then((AMap: any) => {
-          const theParams: any = {
+        .then((AMap: Record<any, any>) => {
+          const theParams: Record<any, any> = {
             zoom: theProps.zoom,
             dragEnable: theProps.dragEnable,
             zoomEnable: theProps.zoomEnable,
@@ -111,25 +113,18 @@
             theParams.viewMode = theProps.viewMode;
           }
 
-          console.log(theParams, 'theParams');
-          theMap.value = new AMap.Map(theProps.vid, theParams);
-          theEmits('inited', theMap.value);
+          theGaodeMap.value = AMap;
+          theMap.value = new AMap.Map(theProps.mapId, theParams);
+          theEmits('inited', theMap, theGaodeMap);
         })
         .catch((e: any) => {
           theEmits('init-error', e);
         });
     }
-    // theMap.value = theAMap.Map('w-map-core', {});
-    // console.log(theMap.value, 'theMap.value');
-    //  if (this.amapManager) this.amapManager.setMap(this.$amap);
-    //  this.$emit(CONST.AMAP_READY_EVENT, this.$amap);
-    //  this.$children.forEach(component => {
-    //    component.$emit(CONST.AMAP_READY_EVENT, this.$amap);
-    //  });
-    //  if (this.plugins && this.plugins.length) {
-    //    this.addPlugins();
-    //  }
   };
+
+  useProvideMap(theMap, theProps.mapId);
+  useProvideGaoDeMap(theGaodeMap);
 
   onBeforeMount(setScurity);
   onMounted(initTheMap);
