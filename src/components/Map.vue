@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-  import type { PropType } from 'vue';
+  import { computed, PropType } from 'vue';
   import { onBeforeMount, onMounted, ref } from 'vue';
   import AMapLoader from '@amap/amap-jsapi-loader';
   import { loadMap } from './utils/load';
@@ -123,11 +123,11 @@
   };
 
   defineExpose({
-    gaodeMap: theGaodeMap.value,
-    map: theMap.value,
+    gaodeMap: computed(() => theGaodeMap.value),
+    map: computed(() => theMap.value),
   });
 
-  useProvideMap(theMap, theProps.mapId);
+  useProvideMap(theMap);
   useProvideGaoDeMap(theGaodeMap);
 
   onBeforeMount(setScurity);
