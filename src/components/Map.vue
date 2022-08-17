@@ -78,8 +78,8 @@
 
   const theEmits = defineEmits(['inited', 'init-error']);
 
-  const theMap = ref<Record<any, any>>(null);
-  const theGaodeMap = ref<Record<any, any>>(null);
+  const theMap = ref<Record<any, any> | any>(null);
+  const theGaodeMap = ref<Record<any, any> | any>(null);
   const theWindow = window as Record<any, any>;
 
   const setScurity = () => {
@@ -89,7 +89,7 @@
   };
 
   const initTheMap = async () => {
-    const theAMap: Record<any, any> = await loadMap();
+    await loadMap();
 
     if (theProps.mapKey) {
       AMapLoader.load({
@@ -112,7 +112,6 @@
           if (theProps.viewMode) {
             theParams.viewMode = theProps.viewMode;
           }
-
           theGaodeMap.value = AMap;
           theMap.value = new AMap.Map(theProps.mapId, theParams);
           theEmits('inited', theMap, theGaodeMap);
@@ -122,6 +121,11 @@
         });
     }
   };
+
+  defineExpose({
+    gaodeMap: theGaodeMap.value,
+    map: theMap.value,
+  });
 
   useProvideMap(theMap, theProps.mapId);
   useProvideGaoDeMap(theGaodeMap);
