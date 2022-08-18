@@ -14,67 +14,9 @@
   import { loadMap } from './utils/load';
   import { useProvideMap } from './use-map';
   import { useProvideGaoDeMap } from './use-gaode-map';
+  import { mapProps } from './map-props';
 
-  const theProps = defineProps({
-    mapId: {
-      type: String,
-      default: 'amap',
-    },
-    mapKey: {
-      type: String,
-      default: '',
-    },
-    // https://lbs.amap.com/api/jsapi-v2/guide/abc/load
-    securityConfig: {
-      type: Object,
-      default: () => ({}),
-    },
-    version: {
-      type: String,
-      default: '2.0',
-    },
-    plugins: {
-      type: Array as PropType<string[]>,
-      default: () => [],
-    },
-    zoom: {
-      type: Number,
-      default: 14,
-    },
-    // https://lbs.amap.com/api/javascript-api/reference/map
-    zooms: {
-      type: Array as PropType<number[]>,
-      default: () => [],
-    },
-    center: {
-      type: Array as PropType<string[] | number[]>,
-      default: () => [],
-    },
-    viewMode: {
-      type: String,
-      default: '', // 3D
-    },
-    dragEnable: {
-      type: Boolean,
-      default: true,
-    },
-    zoomEnable: {
-      type: Boolean,
-      default: true,
-    },
-    doubleClickZoom: {
-      type: Boolean,
-      default: true,
-    },
-    pitch: {
-      type: Number,
-      default: 0,
-    },
-    pitchEnable: {
-      type: Boolean,
-      default: true,
-    },
-  });
+  const theProps = defineProps(mapProps);
 
   const theEmits = defineEmits(['inited', 'init-error']);
 
@@ -105,6 +47,7 @@
             doubleClickZoom: theProps.doubleClickZoom,
             pitch: theProps.pitch,
             pitchEnable: theProps.pitchEnable,
+            animateEnable: theProps.animateEnable,
           };
           if (theProps.center.length > 1) {
             theParams.center = theProps.center;
@@ -114,7 +57,9 @@
           }
           theGaodeMap.value = AMap;
           theMap.value = new AMap.Map(theProps.mapId, theParams);
-          theEmits('inited', theMap, theGaodeMap);
+          theMap.value.on('complete', () => {
+            theEmits('inited', theMap, theGaodeMap);
+          });
         })
         .catch((e: any) => {
           theEmits('init-error', e);
