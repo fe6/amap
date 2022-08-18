@@ -162,7 +162,7 @@
       >
       </MapSearch>
     </div>
-    <!-- <h3>点聚合完全自定义</h3>
+    <h3>点聚合完全自定义</h3>
     <div>
       <a
         href="https://lbs.amap.com/demo/jsapi-v2/example/mass-markers/markerclusterer"
@@ -214,8 +214,8 @@
       >
         <MapClusterer :points="thePoints" />
       </Map>
-    </div> -->
-    <!-- <h3>拖拽标记点</h3>
+    </div>
+    <h3>拖拽标记点</h3>
     <p>当前标记点坐标： {{ theMarkerPoi }}</p>
     <div class="demo-map">
       <Map
@@ -276,7 +276,7 @@
         :dragEnable="false"
         :zoomEnable="false"
       />
-    </div> -->
+    </div>
   </div>
 </template>
 
