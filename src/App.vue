@@ -1,8 +1,8 @@
 <!-- @format -->
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
-  import { Map, MapMarker, MapClusterer } from './components';
+  import { onBeforeMount, onMounted, ref } from 'vue';
+  import { Map, MapMarker, MapClusterer, MapSearch } from './components';
   // import { loadMap } from './components';
 
   // loadMap();
@@ -83,9 +83,40 @@
   };
   // 点聚合完全自定义 end
 
+  // 搜索 start
+  const theCode = ref<number[]>([]);
+  const theRegion = ref([]);
+  const getRegions = () => {
+    fetch('https://api.dev.mosh.cn/public/region/tree?level=3')
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.code === 10000) {
+          theRegion.value = data.data;
+        }
+      });
+  };
+  const theValue = ref('');
+  const theLatitude = ref('');
+  const theLongitude = ref('');
+
+  const the1Value = ref('三里屯西街');
+  const the1Longitude = ref('116.454157');
+  const the1Latitude = ref('39.936468');
+  const the1Code = ref([110000, 110100, 110105]);
+  // 搜索 end
+
+  onBeforeMount(() => {
+    getRegions();
+  });
   onMounted(() => {
     setTimeout(() => {
       thePoints.value = theWindow.points;
+    }, 1000);
+    setTimeout(() => {
+      theValue.value = '三里屯西街';
+      theLongitude.value = '116.454157';
+      theLatitude.value = '39.936468';
+      theCode.value = [110000, 110100, 110105];
     }, 1000);
   });
 </script>
@@ -93,7 +124,45 @@
 <template>
   <div>
     <h1>AMAP</h1>
-    <h3>点聚合完全自定义</h3>
+    <h3>搜索带入点</h3>
+    <p>当前选择的省市区： {{ the1Code }}</p>
+    <p>当前地址： {{ the1Value }}</p>
+    <p>当前经度： {{ the1Longitude }}</p>
+    <p>当前纬度： {{ the1Latitude }}</p>
+    <div class="demo-map">
+      <MapSearch
+        v-model:code="the1Code"
+        v-model:longitude="the1Longitude"
+        v-model:latitude="the1Latitude"
+        v-model:value="the1Value"
+        :cascaderOptions="theRegion"
+        mapId="map9"
+        map-key="e37740bc1cc102bdc13fe10b02d82de6"
+        :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
+        :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"
+      >
+      </MapSearch>
+    </div>
+    <h3>搜索</h3>
+    <p>当前选择的省市区： {{ theCode }}</p>
+    <p>当前地址： {{ theValue }}</p>
+    <p>当前经度： {{ theLongitude }}</p>
+    <p>当前纬度： {{ theLatitude }}</p>
+    <div class="demo-map">
+      <MapSearch
+        v-model:code="theCode"
+        v-model:longitude="theLongitude"
+        v-model:latitude="theLatitude"
+        v-model:value="theValue"
+        :cascaderOptions="theRegion"
+        mapId="map8"
+        map-key="e37740bc1cc102bdc13fe10b02d82de6"
+        :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
+        :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"
+      >
+      </MapSearch>
+    </div>
+    <!-- <h3>点聚合完全自定义</h3>
     <div>
       <a
         href="https://lbs.amap.com/demo/jsapi-v2/example/mass-markers/markerclusterer"
@@ -145,8 +214,8 @@
       >
         <MapClusterer :points="thePoints" />
       </Map>
-    </div>
-    <h3>拖拽标记点</h3>
+    </div> -->
+    <!-- <h3>拖拽标记点</h3>
     <p>当前标记点坐标： {{ theMarkerPoi }}</p>
     <div class="demo-map">
       <Map
@@ -207,7 +276,7 @@
         :dragEnable="false"
         :zoomEnable="false"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 

@@ -90,6 +90,7 @@
   });
 
   watch(() => theMap.value, initMarker);
+  watch(() => theProps.value, initMarker);
 
   onMounted(initMarker);
 </script>
