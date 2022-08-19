@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { onMounted, PropType, ref, watch, watchEffect } from 'vue';
+  import { onMounted, PropType, ref, watch } from 'vue';
   import {
     Cascader,
     ContainerScroll,
@@ -256,19 +256,6 @@
     updatePoi();
     updateKeyword();
   });
-
-  // watchEffect(() => {
-  //   if (theProps.longitude && theProps.latitude) {
-  //     console.log(theProps.longitude, 'theProps.longitude');
-  //       // searchMap([theProps.longitude, theProps.latitude]);
-  //       // theCenter.value = [theProps.longitude, theProps.latitude]
-
-  //     // setTimeout(() => {
-  //     //   searchMap([Number(theProps.longitude), Number(theProps.latitude)]);
-  //     // }, 300);
-  //     // console.log(theCenter.value, theProps.center, ',,,theCenter.value');
-  //   }
-  // })
 </script>
 <style>
   .w-map-space,

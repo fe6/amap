@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, PropType } from 'vue';
+  import { computed } from 'vue';
   import { onBeforeMount, onMounted, ref } from 'vue';
   import AMapLoader from '@amap/amap-jsapi-loader';
   import { loadMap } from './utils/load';
