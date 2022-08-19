@@ -76,4 +76,8 @@ export const mapProps = {
     type: Number,
     default: 0,
   },
+  forceRender: {
+    type: Boolean,
+    default: true,
+  },
 };

@@ -51,6 +51,7 @@
         :dragEnable="dragEnable"
         :zoomEnable="zoomEnable"
         :doubleClickZoom="doubleClickZoom"
+        :forceRender="forceRender"
         v-if="showMap"
         @inited="mapInited"
       >
