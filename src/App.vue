@@ -12,7 +12,11 @@
   } from './components';
   // import { loadMap } from './components';
 
-  // loadMap();
+  // loadMap({
+  //   mapKey: 'e37740bc1cc102bdc13fe10b02d82de6',
+  //   securityConfig: { securityJsCode: '618328f70209e0ce7566f84258326f5d' },
+  //   plugins: ['AMap.RectangleEditor', 'AMap.PlaceSearch', 'AMap.AutoComplete', 'AMap.MarkerClusterer'],
+  // });
 
   const theWindow = window as any;
 
