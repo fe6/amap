@@ -56,7 +56,9 @@
   };
 
   const initMarker = () => {
-    if (theMap.value) {
+    // FIX 拖拽过程中的重复渲染
+    if (theMap.value && !theMarker.value) {
+      console.log(8, 'theMap.value');
       const theParams: Record<any, any> = {
         position: theProps.value,
         draggable: theProps.draggable,

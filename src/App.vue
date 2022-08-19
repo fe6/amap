@@ -224,7 +224,7 @@
         </Map> -->
       </div>
     </Modal>
-    <!-- <h3>矩形-可编辑</h3>
+    <h3>矩形-可编辑</h3>
     <Space>
       <Button @click="closeEdit" :disabled="!isOpen">关闭编辑</Button>
       <Button @click="openEdit" :disabled="isOpen">开启编辑</Button>
@@ -314,7 +314,7 @@
         :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"
       >
       </MapSearch>
-    </div> -->
+    </div>
     <h3>搜索</h3>
     <p>当前选择的省市区： {{ theCode }}</p>
     <p>当前地址： {{ theValue }}</p>
@@ -335,7 +335,7 @@
       >
       </MapSearch>
     </div>
-    <!-- <h3>点聚合完全自定义</h3>
+    <h3>点聚合完全自定义</h3>
     <div>
       <a
         href="https://lbs.amap.com/demo/jsapi-v2/example/mass-markers/markerclusterer"
@@ -449,7 +449,7 @@
         :dragEnable="false"
         :zoomEnable="false"
       />
-    </div> -->
+    </div>
   </div>
 </template>
 
