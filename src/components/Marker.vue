@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <script lang="ts" setup>
-  import { onMounted, PropType } from 'vue';
+  import { computed, onMounted, PropType } from 'vue';
   import { watchEffect, watch, ref } from 'vue';
   import { useInjectMap } from './use-map';
   import { useInjectGaoDeMap } from './use-gaode-map';
@@ -86,7 +86,7 @@
   };
 
   defineExpose({
-    marker: theMarker.value,
+    marker: computed(() => theMarker.value),
   });
 
   watch(() => theMap.value, initMarker);

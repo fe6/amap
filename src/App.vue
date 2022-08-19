@@ -2,7 +2,14 @@
 
 <script setup lang="ts">
   import { onBeforeMount, onMounted, ref } from 'vue';
-  import { Map, MapMarker, MapClusterer, MapSearch } from './components';
+  import { Button, Space } from '@fe6/water-pro';
+  import {
+    Map,
+    MapMarker,
+    MapClusterer,
+    MapSearch,
+    MapRectangle,
+  } from './components';
   // import { loadMap } from './components';
 
   // loadMap();
@@ -105,12 +112,41 @@
   const the1Code = ref([110000, 110100, 110105]);
   // 搜索 end
 
+  // 矩形 start
+  const rectangleEdit = ref<any>(null);
+  const isOpen = ref(true);
+  const southWestLongitude = ref();
+  const southWestLatitude = ref();
+  const northEastLongitude = ref();
+  const northEastLatitude = ref();
+
+  const initRect = () => {
+    southWestLongitude.value = 116.356449;
+    southWestLatitude.value = 39.859008;
+    northEastLongitude.value = 116.417901;
+    northEastLatitude.value = 39.893797;
+  };
+  const closeEdit = () => {
+    if (rectangleEdit.value) {
+      rectangleEdit.value.rectangleEditor.close();
+      isOpen.value = false;
+    }
+  };
+  const openEdit = () => {
+    if (rectangleEdit.value) {
+      rectangleEdit.value.rectangleEditor.open();
+      isOpen.value = true;
+    }
+  };
+  // 矩形 end
+
   onBeforeMount(() => {
     getRegions();
   });
   onMounted(() => {
     setTimeout(() => {
       thePoints.value = theWindow.points;
+      initRect();
     }, 1000);
     setTimeout(() => {
       theValue.value = '三里屯西街';
@@ -124,10 +160,68 @@
 <template>
   <div>
     <h1>AMAP</h1>
+    <h3>矩形-可编辑</h3>
+    <Space>
+      <Button @click="closeEdit" :disabled="!isOpen">关闭编辑</Button>
+      <Button @click="openEdit" :disabled="isOpen">开启编辑</Button>
+    </Space>
+    <div>
+      左下角纬度: {{ southWestLongitude }} , 左下角经度:
+      {{ southWestLongitude }}
+    </div>
+    <div>
+      右上角纬度: {{ northEastLongitude }} , 右上角经度: {{ northEastLatitude }}
+    </div>
+    <div class="demo-map">
+      <Map
+        mapId="map12"
+        map-key="e37740bc1cc102bdc13fe10b02d82de6"
+        :center="[116.387175, 39.876405]"
+        :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
+        :plugins="['AMap.RectangleEditor']"
+      >
+        <MapRectangle
+          v-model:southWestLongitude="southWestLongitude"
+          v-model:southWestLatitude="southWestLatitude"
+          v-model:northEastLongitude="northEastLongitude"
+          v-model:northEastLatitude="northEastLatitude"
+          fillColor="blue"
+          cursor="move"
+          editable
+          ref="rectangleEdit"
+        />
+      </Map>
+    </div>
+    <h3>矩形</h3>
+    <div class="demo-map">
+      <Map
+        mapId="map11"
+        map-key="e37740bc1cc102bdc13fe10b02d82de6"
+        :center="[116.387175, 39.876405]"
+        :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
+        :plugins="['AMap.RectangleEditor']"
+      >
+        <MapRectangle
+          southWestLongitude="116.356449"
+          southWestLatitude="39.859008"
+          northEastLongitude="116.417901"
+          northEastLatitude="39.893797"
+          strokeColor="red"
+          :strokeWeight="6"
+          :strokeOpacity="0.5"
+          :strokeDasharray="[30, 10]"
+          strokeStyle="dashed"
+          fillColor="blue"
+          :fillOpacity="0.5"
+          cursor="pointer"
+          :zIndex="50"
+        />
+      </Map>
+    </div>
     <h3>瓦片图</h3>
     <div class="demo-map">
       <Map
-        mapId="map1"
+        mapId="map10"
         map-key="e37740bc1cc102bdc13fe10b02d82de6"
         :showLabel="false"
         :center="[108.966509, 34.203987]"
