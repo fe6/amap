@@ -2,12 +2,13 @@
   "name": "@fe6/amap",
   "version": "0.0.0",
   "description": "Gaud components of vue3",
-  "main": "index.js",
   "scripts": {
     "start": "vite",
+    "build:lib": "vite build --config vite.config.lib.ts",
     "prepare": "husky install",
     "preinstall": "npx only-allow pnpm",
-    "lint": "pretty-quick --staged"
+    "lint": "pretty-quick --staged",
+    "prepublishOnly": "pnpm build:lib"
   },
   "repository": {
     "type": "git",
@@ -53,5 +54,17 @@
   },
   "dependencies": {
     "@amap/amap-jsapi-loader": "^1.0.1"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/a-map.umd.cjs",
+  "module": "./dist/a-map.js",
+  "exports": {
+    ".": {
+      "import": "./dist/a-map.js",
+      "require": "./dist/a-map.umd.cjs"
+    }
   }
 }

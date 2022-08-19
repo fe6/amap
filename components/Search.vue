@@ -73,7 +73,6 @@
   import Map from './Map.vue';
   import MapMarker from './Marker.vue';
   import { mapProps } from './map-props';
-  import { areaData } from './area-data';
 
   const Search = Input.Search;
   const Text = Typography.Text;
@@ -130,6 +129,10 @@
       default: () => ({}),
     },
     placeSearchConfig: {
+      type: Object,
+      default: () => ({}),
+    },
+    areaData: {
       type: Object,
       default: () => ({}),
     },
@@ -203,13 +206,12 @@
 
   const selOne = (tip: Record<any, any>) => {
     theKeyword.value = tip.name;
-
     if (
-      areaData[tip.adcode] &&
-      areaData[tip.adcode] &&
-      areaData[tip.adcode].addressCode
+      JSON.stringify(theProps.areaData) !== '{}' &&
+      theProps.areaData[tip.adcode] &&
+      theProps.areaData[tip.adcode].addressCode
     ) {
-      cascaderChange(areaData[tip.adcode].addressCode);
+      cascaderChange(theProps.areaData[tip.adcode].addressCode);
     }
     theTips.value = [];
     if (tip.location) {
