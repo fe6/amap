@@ -2,7 +2,7 @@
 
 <script setup lang="ts">
   import { onBeforeMount, onMounted, ref } from 'vue';
-  import { Button, Space } from '@fe6/water-pro';
+  import { Button, Space, Modal } from '@fe6/water-pro';
   import {
     Map,
     MapMarker,
@@ -144,6 +144,20 @@
   };
   // 矩形 end
 
+  // 弹框地图 start
+  const visible = ref(false);
+  const renderMap = ref(false);
+  const openModal = () => {
+    visible.value = true;
+    setTimeout(() => {
+      renderMap.value = true;
+    }, 500);
+  };
+  const closeModal = () => {
+    visible.value = false;
+  };
+  // 弹框地图 end
+
   onBeforeMount(() => {
     getRegions();
   });
@@ -164,6 +178,50 @@
 <template>
   <div>
     <h1>AMAP</h1>
+    <h3>弹框使用</h3>
+    <Button @click="openModal">开启弹框地图</Button>
+    <Modal v-model:visible="visible" title="AMAP 的弹框" @ok="closeModal">
+      <div style="width: 100%; height: 400px">
+        <!-- <Map
+          mapId="map13"
+          map-key="e37740bc1cc102bdc13fe10b02d82de6"
+          :center="[116.397428, 39.90923]"
+          :zoom="20"
+          :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
+          :dragEnable="false"
+          :zoomEnable="false"
+          :forceRender="renderMap"
+        /> -->
+        <MapSearch
+          v-model:code="theCode"
+          v-model:longitude="theLongitude"
+          v-model:latitude="theLatitude"
+          v-model:value="theValue"
+          :cascaderOptions="theRegion"
+          mapId="map14"
+          map-key="e37740bc1cc102bdc13fe10b02d82de6"
+          :securityConfig="{
+            securityJsCode: '618328f70209e0ce7566f84258326f5d',
+          }"
+          :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"
+          :forceRender="renderMap"
+        >
+        </MapSearch>
+        <!-- <Map
+          mapId="map15"
+          map-key="e37740bc1cc102bdc13fe10b02d82de6"
+          :center="[116.397428, 39.90923]"
+          :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
+            :forceRender="renderMap"
+        >
+          <MapMarker
+            v-model:value="theMarkerPoi"
+            draggable
+            cursor="move"
+          ></MapMarker>
+        </Map> -->
+      </div>
+    </Modal>
     <h3>矩形-可编辑</h3>
     <Space>
       <Button @click="closeEdit" :disabled="!isOpen">关闭编辑</Button>

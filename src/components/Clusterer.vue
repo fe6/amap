@@ -72,19 +72,21 @@
         theParams.styles = theProps.styles(theGaodeMap, theMap);
       }
 
-      theClusterer.value = new theGaodeMap.value.MarkerClusterer(
-        theMap.value,
-        theProps.points,
-        theParams,
-      );
-      theClusterer.value.on('click', (clickv: Record<any, any>) => {
-        let curZoom = theMap.value.getZoom();
-        if (curZoom < 20) {
-          curZoom += 1;
-        }
-        theMap.value.setZoomAndCenter(curZoom, clickv.lnglat);
-        theEmits('click', clickv, theGaodeMap, theMap);
-      });
+      if (theGaodeMap.value.MarkerClusterer) {
+        theClusterer.value = new theGaodeMap.value.MarkerClusterer(
+          theMap.value,
+          theProps.points,
+          theParams,
+        );
+        theClusterer.value.on('click', (clickv: Record<any, any>) => {
+          let curZoom = theMap.value.getZoom();
+          if (curZoom < 20) {
+            curZoom += 1;
+          }
+          theMap.value.setZoomAndCenter(curZoom, clickv.lnglat);
+          theEmits('click', clickv, theGaodeMap, theMap);
+        });
+      }
     }
   };
 

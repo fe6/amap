@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, watch } from 'vue';
+  import { computed, nextTick, watch } from 'vue';
   import { onMounted, ref } from 'vue';
   import { loadMap, theLoadAMap } from './utils/load';
   import { useProvideMap } from './use-map';
@@ -99,7 +99,7 @@
   };
 
   const initTheMap = async () => {
-    if (theProps.mapKey) {
+    if (theProps.mapKey && theProps.forceRender) {
       try {
         loadMap({
           mapKey: theProps.mapKey,
@@ -121,6 +121,16 @@
     () => {
       if (theLoadAMap.value) {
         renderMap(theLoadAMap.value);
+      }
+    },
+  );
+  watch(
+    () => theProps.forceRender,
+    () => {
+      if (theLoadAMap.value) {
+        renderMap(theLoadAMap.value);
+      } else {
+        initTheMap();
       }
     },
   );
