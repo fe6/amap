@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, nextTick, watch } from 'vue';
+  import { computed, nextTick, onBeforeUnmount, watch } from 'vue';
   import { onMounted, ref } from 'vue';
   import { loadMap, theLoadAMap } from './utils/load';
   import { useProvideMap } from './use-map';
@@ -99,6 +99,11 @@
   };
 
   const initTheMap = async () => {
+    // FIX 页面切换没有渲染的问题
+    if (theLoadAMap.value) {
+      renderMap(theLoadAMap.value);
+      return;
+    }
     if (theProps.mapKey && theProps.forceRender) {
       try {
         loadMap({
@@ -144,6 +149,13 @@
   useProvideGaoDeMap(theGaodeMap);
 
   onMounted(initTheMap);
+
+  onBeforeUnmount(() => {
+    if (theMap.value && typeof theMap.value.destroy === 'function') {
+      theMap.value.destroy();
+      theMap.value = null;
+    }
+  });
 </script>
 <style>
   .w-map {
