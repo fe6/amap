@@ -2,7 +2,7 @@
 
 <script lang="ts" setup>
   import { computed, onMounted, PropType } from 'vue';
-  import { watchEffect, watch, ref } from 'vue';
+  import { watch, ref } from 'vue';
   import { useInjectMap } from './use-map';
   import { useInjectGaoDeMap } from './use-gaode-map';
 

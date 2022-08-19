@@ -1,6 +1,6 @@
 /** @format */
 
-import type { ComputedRef, UnwrapRef } from 'vue';
+import type { ComputedRef } from 'vue';
 import { computed, inject, provide } from 'vue';
 
 const gaodeMapProvider = Symbol('GaoDeMapProvider');
