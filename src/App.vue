@@ -124,6 +124,20 @@
 <template>
   <div>
     <h1>AMAP</h1>
+    <h3>瓦片图</h3>
+    <div class="demo-map">
+      <Map
+        mapId="map1"
+        map-key="e37740bc1cc102bdc13fe10b02d82de6"
+        :showLabel="false"
+        :center="[108.966509, 34.203987]"
+        :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
+        :zoom="15"
+        :zooms="[15, 18]"
+        tileUrl="https://cdn.dev.mosh.cn/assets/image/tiles-datang/${z}/${x}_${y}.png"
+        :maxLeave="8000"
+      />
+    </div>
     <h3>搜索带入点</h3>
     <p>当前选择的省市区： {{ the1Code }}</p>
     <p>当前地址： {{ the1Value }}</p>

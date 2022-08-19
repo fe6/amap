@@ -30,6 +30,39 @@
     }
   };
 
+  const initTileLayer = () => {
+    if (theProps.tileUrl.length > 0) {
+      const layer = new theGaodeMap.value.TileLayer.Flexible({
+        cacheSize: 30,
+        opacity: 1,
+        createTile: function (
+          x: number,
+          y: number,
+          z: number,
+          success: any,
+          fail: any,
+        ) {
+          if (z < 15 || z > 19) {
+            fail();
+            return;
+          }
+
+          const img = document.createElement('img');
+          img.onload = function () {
+            success(img);
+          };
+          img.crossOrigin = 'anonymous'; // 必须添加，同时图片要有跨域头
+          img.onerror = fail;
+          img.src = theProps.tileUrl
+            .replace(/\$\{x\}/, String(x))
+            .replace(/\$\{y\}/, String(y))
+            .replace(/\$\{z\}/, String(z));
+        },
+      });
+      theMap.value.addLayer(layer);
+    }
+  };
+
   const initTheMap = async () => {
     await loadMap();
 
@@ -42,11 +75,13 @@
         .then((AMap: Record<any, any>) => {
           const theParams: Record<any, any> = {
             zoom: theProps.zoom,
+            zooms: theProps.zooms,
             dragEnable: theProps.dragEnable,
             zoomEnable: theProps.zoomEnable,
             doubleClickZoom: theProps.doubleClickZoom,
             pitch: theProps.pitch,
             pitchEnable: theProps.pitchEnable,
+            showLabel: theProps.showLabel,
             animateEnable: theProps.animateEnable,
           };
           if (theProps.center.length > 1) {
@@ -59,6 +94,22 @@
           theMap.value = new AMap.Map(theProps.mapId, theParams);
           theMap.value.on('complete', () => {
             theEmits('inited', theMap, theGaodeMap);
+            initTileLayer();
+          });
+
+          let timer: any = null;
+          theMap.value.on('mapmove', (ev: Record<any, any>) => {
+            if (theProps.maxLeave > 0) {
+              clearTimeout(timer);
+              timer = setTimeout(() => {
+                const theDistance = theMap.value
+                  .getCenter()
+                  .distance(theProps.center);
+                if (theDistance > 10000) {
+                  theMap.value.setCenter(theProps.center);
+                }
+              }, 300);
+            }
           });
         })
         .catch((e: any) => {

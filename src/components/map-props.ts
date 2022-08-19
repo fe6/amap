@@ -30,7 +30,7 @@ export const mapProps = {
   // https://lbs.amap.com/api/javascript-api/reference/map
   zooms: {
     type: Array as PropType<number[]>,
-    default: () => [],
+    default: () => [2, 20],
   },
   center: {
     type: Array as PropType<string[] | number[]>,
@@ -39,6 +39,10 @@ export const mapProps = {
   viewMode: {
     type: String,
     default: '', // 3D
+  },
+  showLabel: {
+    type: Boolean,
+    default: true,
   },
   dragEnable: {
     type: Boolean,
@@ -63,5 +67,13 @@ export const mapProps = {
   animateEnable: {
     type: Boolean,
     default: false,
+  },
+  tileUrl: {
+    type: String,
+    default: '',
+  },
+  maxLeave: {
+    type: Number,
+    default: 0,
   },
 };
