@@ -8,10 +8,6 @@
 
   // https://lbs.amap.com/api/javascript-api/reference/overlay#marker
   const theProps = defineProps({
-    value: {
-      type: Array as PropType<string[] | number[]>,
-      default: () => [],
-    },
     points: {
       type: Object as PropType<Record<any, any>>,
       default: () => [],

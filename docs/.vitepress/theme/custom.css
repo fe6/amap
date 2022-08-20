@@ -84,6 +84,14 @@ html.dark
   border-color: #434343 !important;
 }
 
+html.dark .ant-typography {
+  color: #ffffffa6 !important;
+}
+
+html.dark .ant-typography.ant-typography-secondar {
+  color: #ffffff73 !important;
+}
+
 .ant-select:hover .ant-select-clear {
   display: none;
 }
