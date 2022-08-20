@@ -15,13 +15,13 @@ hero:
       text: 源码地址
       link: https://github.com/fe6/amap
 features:
-  - icon: ⚡️
-    title: Vite, The DX that can't be beat
-    details: Lorem ipsum...
-  - icon: 🖖
-    title: Power of Vue meets Markdown
-    details: Lorem ipsum...
-  - icon: 🛠️
-    title: Simple and minimal, always
-    details: Lorem ipsum...
+  - icon: 
+    title: 灵活性
+    details: 可按需加载，单独引用，也可全局配置。更加灵活的使用，让 AMap 很灵活
+  - icon: 
+    title: 私密性
+    details: 秘钥等私密配置都装在源码里混合打包，不会暴露在 HTML 等明显且易于找到的地方
+  - icon: 
+    title: 通用性
+    details: 包含了日常的基本功能，方便拓展
 ---
