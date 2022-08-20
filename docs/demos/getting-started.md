@@ -47,5 +47,5 @@ $ yarn add @fe6/amap
 </div>
 
 <script setup lang="ts">
-  import { Map } from '../components';
+  import { Map } from '../../components';
 </script>

@@ -188,6 +188,9 @@
           (status: string, result: Record<any, any>) => {
             if (status === 'complete') {
               theTips.value = result.tips;
+              theEmits('search-change', result);
+            } else {
+              theEmits('search-error', result);
             }
           },
         );
@@ -297,5 +300,13 @@
 
   .w-map-search-item:hover {
     background: #f5f5f5;
+  }
+
+  html.dark .w-map-search-core {
+    background: #1f1f1f;
+  }
+
+  html.dark .w-map-search-item:hover {
+    background-color: #ffffff14;
   }
 </style>

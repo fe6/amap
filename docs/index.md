@@ -10,7 +10,7 @@ hero:
   actions:
     - theme: brand
       text: 快速上手
-      link: /getting-started
+      link: /demos/getting-started
     - theme: alt
       text: 源码地址
       link: https://github.com/fe6/amap

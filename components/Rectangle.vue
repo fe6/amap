@@ -26,7 +26,7 @@
       type: Boolean,
       default: false,
     },
-    defaultOpen: {
+    defaultEdit: {
       type: Boolean,
       default: true,
     },
@@ -49,7 +49,7 @@
     },
     strokeDasharray: {
       type: Array as PropType<number[]>,
-      default: [],
+      default: () => [],
     },
     fillColor: {
       type: String,
@@ -95,7 +95,7 @@
         theMap.value,
         theRectangle.value,
       );
-      if (theProps.defaultOpen) {
+      if (theProps.defaultEdit) {
         theRectangleEditor.value.open();
       }
       theRectangleEditor.value.on('adjust', emitTheEvent);
