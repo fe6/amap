@@ -1,6 +1,6 @@
 # MapSearch
 
-搜索组件需要 [AMap.PlaceSearch](https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.PlaceSearch) 和 [AMap.AutoComplete](https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.Autocomplete) 插件。并且需要配合 @fe6/water-pro@next 使用。其中若想实现输入地址自动选择省市区，还需引入 `@fe6/amap/area-data` 。[例子](./demos/more-search) 。
+搜索组件需要 [AMap.PlaceSearch](https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.PlaceSearch) 和 [AMap.AutoComplete](https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.Autocomplete) 插件。并且需要配合 @fe6/water-pro@next 使用。其中若想实现输入地址自动选择省市区，还需引入 `@fe6/amap/area-data` 。[例子](../demos/more-search) 。
 
 ::: warning
 暗黑主题需要再 `html` 标签中添加 `class="dark"`

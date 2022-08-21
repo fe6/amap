@@ -167,15 +167,28 @@
   const thePlaceSearch = ref<any>(null);
   const theTips = ref<any>([]);
 
-  const mapInited = (map: Record<any, any>, gaodeMap: Record<any, any>) => {
-    theMap.value = map.value;
-    theGaodeMap.value = gaodeMap.value;
+  const initSearch = () => {
     theAutoComplete.value = new theGaodeMap.value.Autocomplete(
       theProps.autocompleteConfig,
     );
     thePlaceSearch.value = new theGaodeMap.value.PlaceSearch(
       theProps.placeSearchConfig,
     );
+  };
+
+  const mapInited = (map: Record<any, any>, gaodeMap: Record<any, any>) => {
+    theMap.value = map.value;
+    theGaodeMap.value = gaodeMap.value;
+    if (typeof theGaodeMap.value.Autocomplete === 'function') {
+      initSearch();
+    } else {
+      // FIX 如果没引入插件
+      // 复现： 从其他普通地图跳转过来
+      theGaodeMap.value.plugin(
+        ['AMap.PlaceSearch', 'AMap.AutoComplete'],
+        initSearch,
+      );
+    }
   };
 
   const searchTime = ref<any>(null);
