@@ -1,6 +1,6 @@
 # MapRectangle
 
-矩形组件，需要在 [Map](./configs/map) 里面使用。若使用编辑功能，需要 **AMap.RectangleEditor** 插件。
+矩形组件，需要在 <a href="./map" target="_blank" rel="noreferrer">Map</a> 里面使用。若使用编辑功能，需要 <a href="https://lbs.amap.com/api/javascript-api/reference/plugin#AMap.RectangleEditor" target="_blank" rel="noreferrer">AMap.RectangleEditor</a> 插件。
 
 <script setup lang="ts">
   import { Map, MapRectangle } from '../../components';
@@ -37,7 +37,7 @@
 
 ## 属性
 
-若写的不详细[可参考](https://lbs.amap.com/api/javascript-api/reference/overlay#rectangle)。
+若写的不详细 <a href="https://lbs.amap.com/api/javascript-api/reference/overlay#rectangle" target="_blank" rel="noreferrer">可参考</a> 。
 
 |名称|说明|类型|默认值|版本|
 |--|--|--|--|--|

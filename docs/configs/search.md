@@ -1,6 +1,6 @@
 # MapSearch
 
-搜索组件需要 [AMap.PlaceSearch](https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.PlaceSearch) 和 [AMap.AutoComplete](https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.Autocomplete) 插件。并且需要配合 @fe6/water-pro@next 使用。其中若想实现输入地址自动选择省市区，还需引入 `@fe6/amap/area-data` 。[例子](../demos/more-search) 。
+搜索组件需要 <a href="https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.PlaceSearch" target="_blank" rel="noreferrer">AMap.PlaceSearch</a> 和 <a href="https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.Autocomplete" target="_blank" rel="noreferrer">AMap.AutoComplete</a> 插件。并且需要配合 <a href="http://water-v4.chjgo.com" target="_blank" rel="noreferrer">@fe6/water-pro@next</a> 使用。其中若想实现输入地址自动选择省市区，还需引入 `@fe6/amap/area-data` 。<a href="../demos/more-search" target="_blank" rel="noreferrer">例子</a> 。
 
 ::: warning
 暗黑主题需要再 `html` 标签中添加 `class="dark"`
@@ -47,10 +47,10 @@
 
 ## 属性
 
-若写的不详细[可参考](https://lbs.amap.com/api/javascript-api/reference/overlay#rectangle)。
+若写的不详细 <a href="https://lbs.amap.com/api/javascript-api/reference/overlay#rectangle" target="_blank" rel="noreferrer">可参考</a> 。
 
 ::: warning
-全部支持 [Map](http://localhost:5173/configs/map.html#%E5%B1%9E%E6%80%A7) 属性
+全部支持 [Map](./map) 属性
 :::
 
 |名称|说明|类型|默认值|版本|
@@ -66,8 +66,8 @@
 |cascaderFieldNames|级联省市区选择器数据字段配置|object|{value: 'code'label: 'name'children: 'items'}| - |
 |space|间距|small \| middle \| large \| number|small| - |
 |size|输入框及省市区练级选择器的大小，可选 `large` `default` `small`|string|default| - |
-|autocompleteConfig|[AMap.AutoComplete](https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.Autocomplete) 其他配置|object| - | - |
-|placeSearchConfig|[AMap.PlaceSearch](https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.PlaceSearch) 其他配置|object| - | - |
+|autocompleteConfig|<a href="https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.Autocomplete" target="_blank" rel="noreferrer">AMap.AutoComplete</a> 其他配置|object| - | - |
+|placeSearchConfig|<a href="https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.PlaceSearch" target="_blank" rel="noreferrer">AMap.PlaceSearch</a> 其他配置|object| - | - |
 
 ## 事件
 

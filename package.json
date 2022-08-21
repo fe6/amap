@@ -6,7 +6,7 @@
     "start": "vite",
     "build:lib": "vite build --config vite.config.lib.ts",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
+    "docs:build": "vitepress serve docs",
     "prepare": "husky install",
     "preinstall": "npx only-allow pnpm",
     "lint": "pretty-quick --staged",
@@ -47,7 +47,6 @@
     "@commitlint/config-conventional": "^17.0.3",
     "@fe6/norm-git-cz-config": "^0.1.1",
     "@fe6/norm-prettier": "^0.1.0",
-    "@fe6/water-pro": "^4.16.3",
     "@vitejs/plugin-vue": "^3.0.3",
     "conventional-changelog-cli": "^2.2.2",
     "cz-customizable": "^6.9.1",
@@ -61,7 +60,9 @@
     "vue-tsc": "^0.40.1"
   },
   "dependencies": {
-    "@amap/amap-jsapi-loader": "^1.0.1"
+    "@amap/amap-jsapi-loader": "^1.0.1",
+    "@fe6/icon-vue": "^1.2.2",
+    "@fe6/water-pro": "^4.16.3"
   },
   "type": "module",
   "files": [
