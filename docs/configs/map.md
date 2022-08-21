@@ -20,17 +20,17 @@
 
 ## 属性
 
-`Map` 组件选择性的支持了一些常用的属性，其他的未来会陆续添加。[参考](https://lbs.amap.com/api/javascript-api/reference/map)
+`Map` 组件选择性的支持了一些常用的属性，其他的未来会陆续添加。<a href="https://lbs.amap.com/api/javascript-api/reference/map" target="_blank" rel="noreferrer">参考</a>
 
 |名称|说明|类型|默认值|版本|
 |--|--|--|--|--|
 |mapId|地图盒子的 id|string|amap| - |
-|mapKey|地图 [key](https://lbs.amap.com/api/jsapi-v2/guide/abc/prepare)|string| - | - |
-|securityConfig|[安全密钥](https://lbs.amap.com/api/jsapi-v2/guide/abc/load)|object<{securityJsCode: string}>|{}| - |
+|mapKey|地图 <a href="https://lbs.amap.com/api/jsapi-v2/guide/abc/prepare" target="_blank" rel="noreferrer">key</a>|string| - | - |
+|securityConfig|<a href="https://lbs.amap.com/api/jsapi-v2/guide/abc/load" target="_blank" rel="noreferrer">安全密钥</a>|object<{securityJsCode: string}>|{}| - |
 |version|地图版本|string|2.0| - |
 |plugins|插件集合 id|string[]|[]| - |
 |zoom|地图默认缩放级别|number|14| - |
-|zooms|地图缩放级别范围|number[]|[[2, 20]](https://lbs.amap.com/api/javascript-api/reference/map)| - |
+|zooms|地图缩放级别范围|number[]|<a href="https://lbs.amap.com/api/javascript-api/reference/map" target="_blank" rel="noreferrer">[2, 20]</a>| - |
 |center|地图中心点坐标|string[] \| number[]|[]| - |
 |viewMode|地图视觉，可选值: **3D**|string| - | - |
 |showLabel|是否展示地图文字|boolean|true| - |

@@ -1,6 +1,6 @@
 # MapMarker
 
-点标记组件，需要在 [Map](./configs/map) 里面使用。
+点标记组件，需要在 [Map](./map) 里面使用。
 
 <script setup lang="ts">
   import { Map, MapMarker } from '../../components';
