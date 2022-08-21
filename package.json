@@ -10,6 +10,7 @@
     "prepare": "husky install",
     "preinstall": "npx only-allow pnpm",
     "lint": "pretty-quick --staged",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "prepublishOnly": "pnpm build:lib"
   },
   "repository": {
@@ -48,6 +49,7 @@
     "@fe6/norm-prettier": "^0.1.0",
     "@fe6/water-pro": "^4.16.3",
     "@vitejs/plugin-vue": "^3.0.3",
+    "conventional-changelog-cli": "^2.2.2",
     "cz-customizable": "^6.9.1",
     "husky": "^8.0.1",
     "prettier": "^2.7.1",
