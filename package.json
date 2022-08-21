@@ -30,6 +30,9 @@
     "pnpm": ">=6 <7"
   },
   "packageManager": "pnpm@6.32.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "config": {
     "commitizen": {
       "path": "node_modules/cz-customizable"
