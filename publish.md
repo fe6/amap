@@ -1,3 +1,4 @@
 # 发布
 
-`yarn publish`
+- `yarn changelog` 然后提交
+- `yarn publish`
