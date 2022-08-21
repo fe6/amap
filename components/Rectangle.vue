@@ -89,17 +89,25 @@
     theEmits('change', event);
   };
 
+  const renderEdit = () => {
+    theRectangleEditor.value = new theGaodeMap.value.RectangleEditor(
+      theMap.value,
+      theRectangle.value,
+    );
+    if (theProps.defaultEdit) {
+      theRectangleEditor.value.open();
+    }
+    theRectangleEditor.value.on('adjust', emitTheEvent);
+    theRectangleEditor.value.on('move', emitTheEvent);
+  };
+
   const setEdit = () => {
-    if (theGaodeMap.value.RectangleEditor && theProps.editable) {
-      theRectangleEditor.value = new theGaodeMap.value.RectangleEditor(
-        theMap.value,
-        theRectangle.value,
-      );
-      if (theProps.defaultEdit) {
-        theRectangleEditor.value.open();
+    if (theProps.editable) {
+      if (theGaodeMap.value.RectangleEditor) {
+        renderEdit();
+      } else {
+        theGaodeMap.value.plugin('AMap.RectangleEditor', renderEdit);
       }
-      theRectangleEditor.value.on('adjust', emitTheEvent);
-      theRectangleEditor.value.on('move', emitTheEvent);
     }
   };
 

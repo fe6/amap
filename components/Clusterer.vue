@@ -46,6 +46,22 @@
   const theGaodeMap = useInjectGaoDeMap();
   const theClusterer = ref<any>(null);
 
+  const renderCluster = (theParams: Record<any, any>) => {
+    theClusterer.value = new theGaodeMap.value.MarkerClusterer(
+      theMap.value,
+      theProps.points,
+      theParams,
+    );
+    theClusterer.value.on('click', (clickv: Record<any, any>) => {
+      let curZoom = theMap.value.getZoom();
+      if (curZoom < 20) {
+        curZoom += 1;
+      }
+      theMap.value.setZoomAndCenter(curZoom, clickv.lnglat);
+      theEmits('click', clickv, theGaodeMap, theMap);
+    });
+  };
+
   const initClusterer = () => {
     if (theGaodeMap.value && theProps.points.length > 0) {
       const theParams: Record<any, any> = {
@@ -69,19 +85,9 @@
       }
 
       if (theGaodeMap.value.MarkerClusterer) {
-        theClusterer.value = new theGaodeMap.value.MarkerClusterer(
-          theMap.value,
-          theProps.points,
-          theParams,
-        );
-        theClusterer.value.on('click', (clickv: Record<any, any>) => {
-          let curZoom = theMap.value.getZoom();
-          if (curZoom < 20) {
-            curZoom += 1;
-          }
-          theMap.value.setZoomAndCenter(curZoom, clickv.lnglat);
-          theEmits('click', clickv, theGaodeMap, theMap);
-        });
+        renderCluster(theParams);
+      } else {
+        theGaodeMap.value.plugin('AMap.MarkerClusterer', renderCluster);
       }
     }
   };

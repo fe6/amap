@@ -39,8 +39,8 @@
 |doubleClickZoom|地图是否可通过双击鼠标放大地图|boolean|true| - |
 |pitchEnable|是否允许设置俯仰角度|boolean|true| - |
 |animateEnable|地图平移过程中是否使用动画|boolean|false| - |
-|forceRender|是否渲染地图。[例子](./demos/more-modal)|boolean|true| - |
-|tileUrl|瓦片图地址配置。[例子](/demos/more-tile)|string| - | - |
+|forceRender|是否渲染地图。[例子](../demos/more-modal)|boolean|true| - |
+|tileUrl|瓦片图地址配置。[例子](../demos/more-tile)|string| - | - |
 |pitch|俯仰角度。角度范围: [0,83]。|number|0| - |
 |maxLeave|偏离中心点(center)的距离之后迅速回到预设的中心点。单位： 米。|number|0| - |
 
