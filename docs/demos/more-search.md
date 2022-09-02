@@ -12,7 +12,7 @@ MapSearch 深度集成 [*@fe6/water-pro@next*](https://github.com/fe6/water-pro)
 
 <script setup lang="ts">
   import { onBeforeMount, onMounted, ref } from 'vue';
-  import { Map, MapSearch } from '../../components';
+  import { MapSearch } from '../../components';
   import { areaData } from '../../public/area-data'
   import '@fe6/water-pro/dist/water.dark.min.css'
 

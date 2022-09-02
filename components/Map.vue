@@ -10,7 +10,7 @@
 <script lang="ts" setup>
   import { computed, nextTick, onBeforeUnmount, watch } from 'vue';
   import { onMounted, ref } from 'vue';
-  import { loadMap, theLoadAMap } from './utils/load';
+  import { loadMap, theLoadAMap } from './load';
   import { useProvideMap } from './use-map';
   import { useProvideGaoDeMap } from './use-gaode-map';
   import { mapProps } from './map-props';
