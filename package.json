@@ -1,6 +1,6 @@
 {
   "name": "@fe6/amap",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Gaud components of vue3",
   "scripts": {
     "start": "vite",
