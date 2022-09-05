@@ -1,64 +1,66 @@
 <!-- @format -->
 
 <template>
-  <Space class="w-map-space" direction="vertical" :size="(space as any)">
-    <Cascader
-      v-model:value="theCode"
-      :field-names="cascaderFieldNames"
-      :options="cascaderOptions"
-      :show-search="{ filter: cascaderFilter }"
-      placeholder="请选择"
-      @change="cascaderChange"
-      class="w-map-cascader"
-      :size="(size as any)"
-      v-if="showCascader"
-    />
-    <div class="w-map-search">
-      <Search
-        v-model:value="theKeyword"
+  <Form.ItemRest>
+    <Space class="w-map-space" direction="vertical" :size="(space as any)">
+      <Cascader
+        v-model:value="theCode"
+        :field-names="cascaderFieldNames"
+        :options="cascaderOptions"
+        :show-search="{ filter: cascaderFilter }"
+        placeholder="请选择"
+        @change="cascaderChange"
+        class="w-map-cascader"
         :size="(size as any)"
-        @change="searchChange"
+        v-if="showCascader"
       />
-      <div class="w-map-search-core" v-if="theTips.length > 0">
-        <ContainerScroll :style="theTips.length > 4 ? 'height: 200px' : ''">
-          <div
-            class="w-map-search-item"
-            v-for="oneTip in theTips"
-            :key="oneTip.id"
-            @click="() => selOne(oneTip)"
-          >
-            <Space>
-              <Text>{{ oneTip.name }}</Text>
-              <Text size="small" type="secondary">{{ oneTip.district }}</Text>
-            </Space>
-          </div>
-        </ContainerScroll>
+      <div class="w-map-search">
+        <Search
+          v-model:value="theKeyword"
+          :size="(size as any)"
+          @change="searchChange"
+        />
+        <div class="w-map-search-core" v-if="theTips.length > 0">
+          <ContainerScroll :style="theTips.length > 4 ? 'height: 200px' : ''">
+            <div
+              class="w-map-search-item"
+              v-for="oneTip in theTips"
+              :key="oneTip.id"
+              @click="() => selOne(oneTip)"
+            >
+              <Space>
+                <Text>{{ oneTip.name }}</Text>
+                <Text size="small" type="secondary">{{ oneTip.district }}</Text>
+              </Space>
+            </div>
+          </ContainerScroll>
+        </div>
       </div>
-    </div>
-    <div class="w-map-core">
-      <Map
-        :pitchEnable="pitchEnable"
-        :pitch="pitch"
-        :mapId="mapId"
-        :mapKey="mapKey"
-        :securityConfig="securityConfig"
-        :version="version"
-        :plugins="plugins"
-        :zoom="zoom"
-        :zooms="zooms"
-        :center="theCenter"
-        :viewMode="viewMode"
-        :dragEnable="dragEnable"
-        :zoomEnable="zoomEnable"
-        :doubleClickZoom="doubleClickZoom"
-        :forceRender="forceRender"
-        v-if="showMap"
-        @inited="mapInited"
-      >
-        <MapMarker :value="theCenter" v-if="theCenter.length > 0" />
-      </Map>
-    </div>
-  </Space>
+      <div class="w-map-core">
+        <Map
+          :pitchEnable="pitchEnable"
+          :pitch="pitch"
+          :mapId="mapId"
+          :mapKey="mapKey"
+          :securityConfig="securityConfig"
+          :version="version"
+          :plugins="plugins"
+          :zoom="zoom"
+          :zooms="zooms"
+          :center="theCenter"
+          :viewMode="viewMode"
+          :dragEnable="dragEnable"
+          :zoomEnable="zoomEnable"
+          :doubleClickZoom="doubleClickZoom"
+          :forceRender="forceRender"
+          v-if="showMap"
+          @inited="mapInited"
+        >
+          <MapMarker :value="theCenter" v-if="theCenter.length > 0" />
+        </Map>
+      </div>
+    </Space>
+  </Form.ItemRest>
 </template>
 
 <script lang="ts" setup>
@@ -69,6 +71,7 @@
     Typography,
     Space,
     Input,
+    Form,
   } from '@fe6/water-pro';
   import Map from './Map.vue';
   import MapMarker from './Marker.vue';
