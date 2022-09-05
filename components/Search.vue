@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <template>
-  <Form.ItemRest>
+  <FormRestItem>
     <Space class="w-map-space" direction="vertical" :size="(space as any)">
       <Cascader
         v-model:value="theCode"
@@ -60,7 +60,7 @@
         </Map>
       </div>
     </Space>
-  </Form.ItemRest>
+  </FormRestItem>
 </template>
 
 <script lang="ts" setup>
@@ -79,6 +79,7 @@
 
   const Search = Input.Search;
   const Text = Typography.Text;
+  const FormRestItem = Form.ItemRest;
 
   const theProps = defineProps({
     code: {
