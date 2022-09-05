@@ -3,6 +3,9 @@
 <script setup lang="ts">
   import { onBeforeMount, onMounted, ref } from 'vue';
   import { Button, Space, Modal } from '@fe6/water-pro';
+  // useForm useModal start
+  import { ModalPro, FormPro, useForm, useModal } from '@fe6/water-pro';
+  // useForm useModal end
   import {
     Map,
     MapMarker,
@@ -11,6 +14,29 @@
     MapRectangle,
   } from '../components';
   import { areaData } from '../components/area-data';
+
+  // useForm useModal start
+  const { register: registerModal, methods: modalMethods } = useModal();
+
+  const [createFormPro, { resetFields, clearValidate, validateFields }] =
+    useForm({
+      schemas: [
+        {
+          field: 'phone',
+          component: 'Slot',
+          label: '取票地址',
+          slot: 'placeNode',
+        },
+      ],
+      okText: '提交',
+      showActionButtonGroup: false,
+    });
+
+  const openFormModal = () => {
+    modalMethods.openModal();
+  };
+  // useForm useModal end
+
   // import { loadMap } from './components';
 
   // loadMap({
@@ -179,6 +205,37 @@
 <template>
   <div>
     <h1>AMAP</h1>
+    <Button @click="openFormModal">打开表单地图</Button>
+    <ModalPro
+      title="新建取票地址"
+      :width="620"
+      :min-height="700"
+      :body-style="{ height: '700px' }"
+      :scroll-style="{ padding: '16px 0 0' }"
+      @register="registerModal"
+    >
+      <div style="padding: 16px 24px 0">
+        <FormPro @register="createFormPro">
+          <template #placeNode>
+            <MapSearch
+              v-model:code="theCode"
+              v-model:longitude="theLongitude"
+              v-model:latitude="theLatitude"
+              v-model:value="theValue"
+              :cascaderOptions="theRegion"
+              map-key="e37740bc1cc102bdc13fe10b02d82de6"
+              :securityConfig="{
+                securityJsCode: '618328f70209e0ce7566f84258326f5d',
+              }"
+              :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"
+              :areaData="areaData"
+              :forceRender="renderMap"
+            >
+            </MapSearch>
+          </template>
+        </FormPro>
+      </div>
+    </ModalPro>
     <h3>弹框使用</h3>
     <Button @click="openModal">开启弹框地图</Button>
     <Modal v-model:visible="visible" title="AMAP 的弹框" @ok="closeModal">

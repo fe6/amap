@@ -1,6 +1,11 @@
 {
   "name": "@fe6/amap",
   "version": "0.2.2",
+  "engines": {
+    "node": ">= 16.0.0",
+    "pnpm": ">=6 <7"
+  },
+  "packageManager": "pnpm@6.32.2",
   "description": "Gaud components of vue3",
   "scripts": {
     "start": "vite",
@@ -29,11 +34,6 @@
     "url": "https://github.com/fe6/amap/issues"
   },
   "homepage": "https://github.com/fe6/amap#readme",
-  "engines": {
-    "node": ">= 16.0.0",
-    "pnpm": ">=6 <7"
-  },
-  "packageManager": "pnpm@6.32.2",
   "publishConfig": {
     "access": "public"
   },
@@ -59,7 +59,7 @@
     "typescript": "^4.7.4",
     "vite": "^3.0.7",
     "vite-plugin-dts": "^1.4.1",
-    "vitepress": "1.0.0-alpha.8",
+    "vitepress": "^1.0.0-alpha.13",
     "vue": "^3.2.37",
     "vue-tsc": "^0.40.1"
   },

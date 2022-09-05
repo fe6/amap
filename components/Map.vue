@@ -106,12 +106,10 @@
     }
     if (theProps.mapKey && theProps.forceRender) {
       try {
-        loadMap({
+        await loadMap({
           mapKey: theProps.mapKey,
           version: theProps.version,
-          securityConfig: {
-            securityJsCode: '618328f70209e0ce7566f84258326f5d',
-          },
+          securityConfig: theProps.securityConfig as any,
           plugins: theProps.plugins,
         });
       } catch (error) {
