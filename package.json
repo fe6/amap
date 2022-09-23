@@ -1,6 +1,6 @@
 {
   "name": "@fe6/amap",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "engines": {
     "node": ">= 16.0.0",
     "pnpm": ">=6 <7"
