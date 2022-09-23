@@ -246,21 +246,21 @@
   };
 
   const updateCode = () => {
-    if (theProps.code.length > 0) {
-      theCode.value = theProps.code;
+    if (Array.isArray(theProps.code)) {
+      theCode.value = theProps.code as any;
     }
   };
   watch(() => theProps.code, updateCode);
 
   const updateKeyword = () => {
-    if (theProps.value.length > 0) {
+    if (typeof theProps.value === 'string') {
       theKeyword.value = theProps.value;
     }
   };
   watch(() => theProps.value, updateKeyword);
 
   const updateCenter = () => {
-    if (theProps.center.length > 0) {
+    if (Array.isArray(theProps.center)) {
       theCenter.value = theProps.center;
     }
   };

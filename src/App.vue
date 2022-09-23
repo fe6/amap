@@ -141,6 +141,12 @@
   const the1Longitude = ref('116.454157');
   const the1Latitude = ref('39.936468');
   const the1Code = ref([110000, 110100, 110105]);
+  const resetSearch = () => {
+    the1Value.value = '';
+    the1Longitude.value = '';
+    the1Latitude.value = '';
+    the1Code.value = [];
+  };
   // 搜索 end
 
   // 矩形 start
@@ -358,6 +364,7 @@
     <p>当前地址： {{ the1Value }}</p>
     <p>当前经度： {{ the1Longitude }}</p>
     <p>当前纬度： {{ the1Latitude }}</p>
+    <div @click="resetSearch">清空</div>
     <div class="demo-map">
       <MapSearch
         v-model:code="the1Code"
