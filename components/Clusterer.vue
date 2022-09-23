@@ -47,6 +47,10 @@
   const theClusterer = ref<any>(null);
 
   const renderCluster = (theParams: Record<any, any>) => {
+    // FIX 二次渲染清空之前渲染的点
+    if (theClusterer.value) {
+      theClusterer.value.setMap(null);
+    }
     theClusterer.value = new theGaodeMap.value.MarkerClusterer(
       theMap.value,
       theProps.points,
