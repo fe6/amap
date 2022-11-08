@@ -1,6 +1,7 @@
 /** @format */
 
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
+
 export const mapProps = {
   mapId: {
     type: String,

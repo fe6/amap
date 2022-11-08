@@ -3,9 +3,9 @@
   "version": "0.2.5",
   "engines": {
     "node": ">= 16.0.0",
-    "pnpm": ">=6 <7"
+    "pnpm": ">7.0.0"
   },
-  "packageManager": "pnpm@6.32.2",
+  "packageManager": "pnpm@7.13.4",
   "description": "Gaud components of vue3",
   "scripts": {
     "start": "vite",
