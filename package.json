@@ -3,7 +3,7 @@
   "version": "0.2.5",
   "engines": {
     "node": ">= 16.0.0",
-    "pnpm": ">=6 <7"
+    "pnpm": ">=7.9"
   },
   "packageManager": "pnpm@6.32.2",
   "description": "Gaud components of vue3",
