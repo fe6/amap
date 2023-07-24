@@ -147,8 +147,92 @@
     the1Latitude.value = '';
     the1Code.value = [];
   };
-  const onDragMarkerEnd = (theInfos: any) => {
-    console.log(theInfos, 'theInfos');
+
+  const onSetAreaIds = async (
+    theNewProvinceId: string,
+    theNewCityId: string,
+    theNewCountyId: string,
+  ) => {
+    let provinceId = '';
+    let cityId = '';
+    let countyId = '';
+    if (theRegion.value.length > 0) {
+      const theDefProvinceItem = JSON.parse(
+        JSON.stringify(theRegion.value?.[0]),
+      );
+      const theDefCityItem = JSON.parse(
+        JSON.stringify(theDefProvinceItem?.items?.[0]),
+      );
+      const theDefCountyItem = JSON.parse(
+        JSON.stringify(theDefCityItem?.items?.[0]),
+      );
+      const theDataProvinceItem = theRegion.value.find(
+        (theProinceOne: any) =>
+          String(theProinceOne?.code) === theNewProvinceId,
+      );
+      if (theNewProvinceId.length > 0 && theDataProvinceItem) {
+        provinceId = theDataProvinceItem?.code;
+
+        // 城市 start
+        let theDataCityItem = (theDataProvinceItem?.items || []).find(
+          (theCityOne: any) => String(theCityOne?.code) === theNewCityId,
+        );
+        if (theNewCityId.length === 0 || !theDataCityItem) {
+          theDataCityItem = JSON.parse(JSON.stringify(theDefCityItem));
+        }
+        cityId = theDataCityItem?.code;
+        // 城市 end
+
+        // 区县 start
+        let theDataCountyItem = (theDataCityItem?.items || []).find(
+          (theCountyOne: any) => String(theCountyOne?.code) === theNewCountyId,
+        );
+        if (theNewCountyId.length === 0 || !theDataCountyItem) {
+          theDataCountyItem = JSON.parse(JSON.stringify(theDefCountyItem));
+        }
+        countyId = theDataCountyItem?.code;
+        // 区县 end
+      } else {
+        provinceId = theDefProvinceItem?.code;
+        cityId = theDefCityItem?.code;
+        countyId = theDefCountyItem?.code;
+      }
+    }
+    return {
+      provinceId: Number(provinceId),
+      cityId: Number(cityId),
+      countyId: Number(countyId),
+    };
+  };
+  const onDragMarkerEnd = (theNewPoi: number[], theInfos: any) => {
+    console.log(theInfos.value, 'theInfos');
+    fetch(
+      `https://dz-api.test.fanzhi.cn/common/lbs/geocode?type=geocode&longitude=${theNewPoi[0]}&latitude=${theNewPoi[1]}`,
+    )
+      .then((response) => response.json())
+      .then(async (data) => {
+        if (data.code === 10000) {
+          const theAddress = data.data.address;
+          const theComp = data.data.component;
+          the1Value.value = theAddress
+            .replace(theComp?.province, '')
+            .replace(theComp?.district, '')
+            .replace(theComp?.township, '')
+            .replace(theComp?.province, '');
+          const theNew1Area = await onSetAreaIds(
+            data.data?.localProvinceCode || '',
+            data.data?.localCityCode || '',
+            data.data?.localDistrictCode || '',
+          );
+          the1Longitude.value = String(data.data?.longitude || theNewPoi[0]);
+          the1Latitude.value = String(data.data?.latitude || theNewPoi[1]);
+          the1Code.value = [
+            theNew1Area.provinceId,
+            theNew1Area.cityId,
+            theNew1Area.countyId,
+          ];
+        }
+      });
   };
   // 搜索 end
 
@@ -271,7 +355,6 @@
           :cascaderOptions="theRegion"
           mapId="map14"
           dragPoint
-          errorPoiTips="获取位置失败"
           @drag-marker-end="onDragMarkerEnd"
           map-key="e37740bc1cc102bdc13fe10b02d82de6"
           :securityConfig="{
@@ -383,6 +466,8 @@
         v-model:value="the1Value"
         :cascaderOptions="theRegion"
         mapId="map9"
+        dragPoint
+        @drag-marker-end="onDragMarkerEnd"
         map-key="e37740bc1cc102bdc13fe10b02d82de6"
         :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
         :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"

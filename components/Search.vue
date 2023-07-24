@@ -141,10 +141,6 @@
       type: Boolean,
       default: false,
     },
-    errorPoiTips: {
-      type: String,
-      default: '',
-    },
     ...mapProps,
     // https://lbs.amap.com/api/javascript-api/reference/search
     autocompleteConfig: {
@@ -226,8 +222,6 @@
       if (theProps.dragPoint) {
         thePlugins.push('AMap.Geocoder');
       }
-
-      console.log(thePlugins, '---');
 
       theGaodeMap.value.plugin(thePlugins, initSearch);
     }
@@ -313,13 +307,7 @@
 
   // 拖拽点位之后
   const onDragedMarker = (theNewPoi: number[]) => {
-    theGeocoder.value.getAddress(theNewPoi, (status: string, result: any) => {
-      if (status === 'complete' && result.info === 'OK') {
-        theEmits('drag-marker-end', result);
-      } else {
-        theProps.errorPoiTips && message.error(theProps.errorPoiTips);
-      }
-    });
+    theEmits('drag-marker-end', theNewPoi, theGeocoder);
   };
 
   onMounted(() => {
