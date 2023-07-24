@@ -11,6 +11,7 @@
         placeholder="请选择"
         @change="cascaderChange"
         class="w-map-cascader"
+        :getPopupContainer="cascaderGetPopupContainer"
         :size="(size as any)"
         v-if="showCascader"
       />
@@ -107,6 +108,10 @@
     showCascader: {
       type: Boolean,
       default: true,
+    },
+    cascaderGetPopupContainer: {
+      type: Function as PropType<(triggerNode?: HTMLElement) => HTMLElement>,
+      default: () => document.body,
     },
     cascaderOptions: {
       type: Array as PropType<any>,

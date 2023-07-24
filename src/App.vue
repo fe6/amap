@@ -192,6 +192,7 @@
   const closeModal = () => {
     visible.value = false;
   };
+  const theContanter = ref();
   // 弹框地图 end
 
   onBeforeMount(() => {
@@ -226,21 +227,24 @@
       <div style="padding: 16px 24px 0">
         <FormPro @register="createFormPro">
           <template #placeNode>
-            <MapSearch
-              v-model:code="theCode"
-              v-model:longitude="theLongitude"
-              v-model:latitude="theLatitude"
-              v-model:value="theValue"
-              :cascaderOptions="theRegion"
-              map-key="e37740bc1cc102bdc13fe10b02d82de6"
-              :securityConfig="{
-                securityJsCode: '618328f70209e0ce7566f84258326f5d',
-              }"
-              :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"
-              :areaData="areaData"
-              :forceRender="renderMap"
-            >
-            </MapSearch>
+            <div ref="theContanter">
+              <MapSearch
+                v-model:code="theCode"
+                v-model:longitude="theLongitude"
+                v-model:latitude="theLatitude"
+                v-model:value="theValue"
+                :cascaderOptions="theRegion"
+                map-key="e37740bc1cc102bdc13fe10b02d82de6"
+                :securityConfig="{
+                  securityJsCode: '618328f70209e0ce7566f84258326f5d',
+                }"
+                :cascaderGetPopupContainer="() => theContanter"
+                :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"
+                :areaData="areaData"
+                :forceRender="renderMap"
+              >
+              </MapSearch>
+            </div>
           </template>
         </FormPro>
       </div>

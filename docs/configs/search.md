@@ -62,6 +62,7 @@
 |showCascader|是否显示级联省市区选择器|boolean|true| - |
 |showMap|是否地图|boolean|true| - |
 |cascaderOptions|级联省市区选择器下拉数据|Array| - | - |
+|cascaderGetPopupContainer|菜单渲染父节点。默认渲染到 body 上，如果你遇到菜单滚动定位问题，试试修改为滚动的区域，并相对其定位。|Function(triggerNode)| () => document.body | 0.3.0 |
 |areaData|输入框输入之后自动选择省市区的数据配置|object| - | - |
 |cascaderFieldNames|级联省市区选择器数据字段配置|object|{value: 'code'label: 'name'children: 'items'}| - |
 |space|间距|small \| middle \| large \| number|small| - |
