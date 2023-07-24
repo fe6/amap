@@ -57,7 +57,12 @@
           v-if="showMap"
           @inited="mapInited"
         >
-          <MapMarker :value="theCenter" v-if="theCenter.length > 0" />
+          <MapMarker
+            :value="theCenter"
+            @drag-end="onDragedMarker"
+            v-if="theCenter.length > 0"
+            :draggable="dragPoint"
+          />
         </Map>
       </div>
     </Space>
@@ -73,6 +78,7 @@
     Space,
     Input,
     Form,
+    message,
   } from '@fe6/water-pro';
   import Map from './Map.vue';
   import MapMarker from './Marker.vue';
@@ -131,6 +137,14 @@
       type: Boolean,
       default: true,
     },
+    dragPoint: {
+      type: Boolean,
+      default: false,
+    },
+    errorPoiTips: {
+      type: String,
+      default: '',
+    },
     ...mapProps,
     // https://lbs.amap.com/api/javascript-api/reference/search
     autocompleteConfig: {
@@ -154,6 +168,7 @@
     'update:value',
     'update:longitude',
     'update:latitude',
+    'drag-marker-end',
   ]);
 
   const cascaderFilter = (inputValue: string, path: any[]) => {
@@ -174,6 +189,7 @@
   const theGaodeMap = ref<any>(null);
   const theAutoComplete = ref<any>(null);
   const thePlaceSearch = ref<any>(null);
+  const theGeocoder = ref<any>(null);
   const theTips = ref<any>([]);
 
   const initSearch = () => {
@@ -183,20 +199,37 @@
     thePlaceSearch.value = new theGaodeMap.value.PlaceSearch(
       theProps.placeSearchConfig,
     );
+    if (theProps.dragPoint) {
+      theGeocoder.value = new theGaodeMap.value.Geocoder({
+        // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+        city: '全国',
+      });
+    }
   };
 
   const mapInited = (map: Record<any, any>, gaodeMap: Record<any, any>) => {
     theMap.value = map.value;
     theGaodeMap.value = gaodeMap.value;
     if (typeof theGaodeMap.value.Autocomplete === 'function') {
-      initSearch();
+      if (theGaodeMap.value.Geocoder) {
+        initSearch();
+      } else {
+        if (theProps.dragPoint) {
+          theGaodeMap.value.plugin(['AMap.Geocoder'], initSearch);
+        }
+      }
     } else {
       // FIX 如果没引入插件
       // 复现： 从其他普通地图跳转过来
-      theGaodeMap.value.plugin(
-        ['AMap.PlaceSearch', 'AMap.AutoComplete'],
-        initSearch,
-      );
+      const thePlugins = ['AMap.PlaceSearch', 'AMap.AutoComplete'];
+
+      if (theProps.dragPoint) {
+        thePlugins.push('AMap.Geocoder');
+      }
+
+      console.log(thePlugins, '---');
+
+      theGaodeMap.value.plugin(thePlugins, initSearch);
     }
   };
 
@@ -277,6 +310,17 @@
     }
   };
   watch([() => theProps.longitude, () => theProps.latitude], updatePoi);
+
+  // 拖拽点位之后
+  const onDragedMarker = (theNewPoi: number[]) => {
+    theGeocoder.value.getAddress(theNewPoi, (status: string, result: any) => {
+      if (status === 'complete' && result.info === 'OK') {
+        theEmits('drag-marker-end', result);
+      } else {
+        theProps.errorPoiTips && message.error(theProps.errorPoiTips);
+      }
+    });
+  };
 
   onMounted(() => {
     updateCode();

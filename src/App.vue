@@ -125,7 +125,7 @@
   const theCode = ref<number[]>([]);
   const theRegion = ref([]);
   const getRegions = () => {
-    fetch('https://api.dev.mosh.cn/public/region/tree?level=3')
+    fetch('https://api.test.fanzhi.cn/common/lbs/regin/tree?level=3')
       .then((response) => response.json())
       .then((data) => {
         if (data.code === 10000) {
@@ -146,6 +146,9 @@
     the1Longitude.value = '';
     the1Latitude.value = '';
     the1Code.value = [];
+  };
+  const onDragMarkerEnd = (theInfos: any) => {
+    console.log(theInfos, 'theInfos');
   };
   // 搜索 end
 
@@ -267,6 +270,9 @@
           v-model:value="theValue"
           :cascaderOptions="theRegion"
           mapId="map14"
+          dragPoint
+          errorPoiTips="获取位置失败"
+          @drag-marker-end="onDragMarkerEnd"
           map-key="e37740bc1cc102bdc13fe10b02d82de6"
           :securityConfig="{
             securityJsCode: '618328f70209e0ce7566f84258326f5d',
