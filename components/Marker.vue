@@ -84,6 +84,10 @@
         theEmits('click', clickv);
       });
     }
+    // 修复搜索定位不准
+    if (theMap.value && theMarker.value) {
+      theMarker.value.setPosition(theProps.value);
+    }
   };
 
   defineExpose({
