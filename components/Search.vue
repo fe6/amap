@@ -189,12 +189,16 @@
   const theTips = ref<any>([]);
 
   const initSearch = () => {
-    theAutoComplete.value = new theGaodeMap.value.Autocomplete(
-      theProps.autocompleteConfig,
-    );
-    thePlaceSearch.value = new theGaodeMap.value.PlaceSearch(
-      theProps.placeSearchConfig,
-    );
+    if (!theAutoComplete.value) {
+      theAutoComplete.value = new theGaodeMap.value.Autocomplete(
+        theProps.autocompleteConfig,
+      );
+    }
+    if (!thePlaceSearch.value) {
+      thePlaceSearch.value = new theGaodeMap.value.PlaceSearch(
+        theProps.placeSearchConfig,
+      );
+    }
     if (theProps.dragPoint) {
       theGeocoder.value = new theGaodeMap.value.Geocoder({
         // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
@@ -212,6 +216,8 @@
       } else {
         if (theProps.dragPoint) {
           theGaodeMap.value.plugin(['AMap.Geocoder'], initSearch);
+        } else {
+          initSearch();
         }
       }
     } else {
