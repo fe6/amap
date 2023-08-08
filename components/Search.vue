@@ -137,6 +137,10 @@
       type: String,
       default: '',
     },
+    address: {
+      type: String,
+      default: '',
+    },
     showCascader: {
       type: Boolean,
       default: true,
@@ -213,6 +217,7 @@
     'update:latitude',
     'drag-marker-end',
     'update:mode',
+    'update:address',
   ]);
 
   const cascaderFilter = (inputValue: string, path: any[]) => {
@@ -304,14 +309,11 @@
   };
 
   const onChangeMode = () => {
-    theKeyword.value = '';
-    theAddress.value = '';
     theEmits('update:mode', theMode.value);
-    theEmits('update:value', '');
   };
 
   const onChangeAddress = () => {
-    theEmits('update:value', theAddress.value);
+    theEmits('update:address', theAddress.value);
   };
 
   const searchMap = (poi: number[]) => {
@@ -344,6 +346,13 @@
     }
   };
 
+  const updateMode = () => {
+    if (typeof theProps.mode === 'string') {
+      theMode.value = theProps.mode;
+    }
+  };
+  watch(() => theProps.mode, updateMode);
+
   const updateCode = () => {
     if (Array.isArray(theProps.code)) {
       theCode.value = theProps.code as any;
@@ -351,13 +360,16 @@
   };
   watch(() => theProps.code, updateCode);
 
+  const updateCustomeAddress = () => {
+    if (typeof theProps.address === 'string') {
+      theAddress.value = theProps.address;
+    }
+  };
+  watch(() => theProps.value, updateCustomeAddress);
+
   const updateKeyword = () => {
     if (typeof theProps.value === 'string') {
-      if (theProps.customLocation && theProps.mode !== 'system') {
-        theAddress.value = theProps.value;
-      } else {
-        theKeyword.value = theProps.value;
-      }
+      theKeyword.value = theProps.value;
     }
   };
   watch(() => theProps.value, updateKeyword);
@@ -386,6 +398,8 @@
     updateCenter();
     updatePoi();
     updateKeyword();
+    updateCustomeAddress();
+    updateMode();
   });
 </script>
 <style>

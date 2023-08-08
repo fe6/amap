@@ -148,6 +148,17 @@
     the1Code.value = [];
   };
 
+  const the2Value = ref('三里屯西街');
+  const the2Longitude = ref('116.454157');
+  const the2Latitude = ref('39.936468');
+  const theMode = ref('system');
+  const the2Code = ref([110000, 110100, 110105]);
+  const theCustomAddress = ref('团结湖公园');
+
+  const onChangeMode = () => {
+    theMode.value = theMode.value === 'custom' ? 'system' : 'custom';
+  };
+
   const onSetAreaIds = async (
     theNewProvinceId: string,
     theNewCityId: string,
@@ -166,7 +177,7 @@
       const theDefCountyItem = JSON.parse(
         JSON.stringify(theDefCityItem?.items?.[0]),
       );
-      const theDataProvinceItem = theRegion.value.find(
+      const theDataProvinceItem: any = theRegion.value.find(
         (theProinceOne: any) =>
           String(theProinceOne?.code) === theNewProvinceId,
       );
@@ -394,7 +405,7 @@
     </div>
     <div class="demo-map">
       <Map
-        mapId="map12"
+        mapId="map13"
         map-key="e37740bc1cc102bdc13fe10b02d82de6"
         :center="[116.387175, 39.876405]"
         :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
@@ -415,7 +426,7 @@
     <h3>矩形</h3>
     <div class="demo-map">
       <Map
-        mapId="map11"
+        mapId="map12"
         map-key="e37740bc1cc102bdc13fe10b02d82de6"
         :center="[116.387175, 39.876405]"
         :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
@@ -441,7 +452,7 @@
     <h3>瓦片图</h3>
     <div class="demo-map">
       <Map
-        mapId="map10"
+        mapId="map11"
         map-key="e37740bc1cc102bdc13fe10b02d82de6"
         :showLabel="false"
         :center="[108.966509, 34.203987]"
@@ -465,6 +476,37 @@
         v-model:latitude="the1Latitude"
         v-model:value="the1Value"
         :cascaderOptions="theRegion"
+        mapId="map10"
+        dragPoint
+        @drag-marker-end="onDragMarkerEnd"
+        map-key="e37740bc1cc102bdc13fe10b02d82de6"
+        :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
+        :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"
+      >
+      </MapSearch>
+    </div>
+
+    <h3>搜索带入点-可拖拽-可切换mode</h3>
+    <p>当前选择的省市区： {{ the2Code }}</p>
+    <p>当前地址： {{ the2Value }}</p>
+    <p>当前自定义地址： {{ theCustomAddress }}</p>
+    <p>当前经度： {{ the2Longitude }}</p>
+    <p>当前纬度： {{ the2Latitude }}</p>
+    <p>当前mode： {{ theMode }}</p>
+    <p>
+      <Button type="primary" @click="onChangeMode">切换模式</Button>
+    </p>
+
+    <div class="demo-map">
+      <MapSearch
+        v-model:code="the2Code"
+        v-model:longitude="the2Longitude"
+        v-model:latitude="the2Latitude"
+        v-model:value="the2Value"
+        v-model:mode="theMode"
+        v-model:address="theCustomAddress"
+        :cascaderOptions="theRegion"
+        customLocation
         mapId="map9"
         dragPoint
         @drag-marker-end="onDragMarkerEnd"
@@ -474,6 +516,7 @@
       >
       </MapSearch>
     </div>
+
     <h3>搜索</h3>
     <p>当前选择的省市区： {{ theCode }}</p>
     <p>当前地址： {{ theValue }}</p>
@@ -612,7 +655,10 @@
   </div>
 </template>
 
-<style scoped>
+<style>
+  body {
+    padding: 50px;
+  }
   .demo-map {
     width: 90vw;
     height: 500px;
