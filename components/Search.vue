@@ -415,16 +415,16 @@
 
   .w-map-search {
     position: relative;
+  }
 
-    .ant-input-group {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
+  .w-map-search .ant-input-group {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
 
-      .ant-input-group-addon {
-        width: auto;
-      }
-    }
+  .w-map-search .ant-input-group .ant-input-group-addon {
+    width: auto;
   }
 
   .w-map-search-core {
