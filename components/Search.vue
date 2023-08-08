@@ -16,11 +16,39 @@
         v-if="showCascader"
       />
       <div class="w-map-search">
-        <Search
-          v-model:value="theKeyword"
-          :size="(size as any)"
-          @change="searchChange"
-        />
+        <template v-if="!customLocation">
+          <Search
+            v-model:value="theKeyword"
+            :size="(size as any)"
+            @change="searchChange"
+          />
+        </template>
+        <template v-else>
+          <InputGroup>
+            <Select v-model:value="theMode" @change="onChangeMode">
+              <SelectOption
+                v-for="theModeItem in modeOptions"
+                :key="theModeItem.value"
+                :value="theModeItem.value"
+              >
+                {{ theModeItem.label }}
+              </SelectOption>
+            </Select>
+
+            <Search
+              v-model:value="theKeyword"
+              :size="(size as any)"
+              @change="searchChange"
+              v-if="theMode === 'system'"
+            />
+            <InputText
+              v-model:value="theAddress"
+              @blur="onChangeAddress"
+              v-else
+            />
+          </InputGroup>
+        </template>
+
         <div class="w-map-search-core" v-if="theTips.length > 0">
           <ContainerScroll :style="theTips.length > 4 ? 'height: 200px' : ''">
             <div
@@ -70,13 +98,15 @@
 </template>
 
 <script lang="ts" setup>
-  import { onMounted, PropType, ref, watch } from 'vue';
+  import { onMounted, PropType, ref, shallowRef, watch } from 'vue';
   import {
     Cascader,
     ContainerScroll,
     Typography,
     Space,
     Input,
+    Select,
+    SelectOption,
     Form,
     message,
   } from '@fe6/water-pro';
@@ -85,6 +115,8 @@
   import { mapProps } from './map-props';
 
   const Search = Input.Search;
+  const InputGroup = Input.Group;
+  const InputText = Input;
   const Text = Typography.Text;
   const FormRestItem = Form.ItemRest;
 
@@ -102,6 +134,10 @@
       default: '',
     },
     value: {
+      type: String,
+      default: '',
+    },
+    address: {
       type: String,
       default: '',
     },
@@ -155,6 +191,21 @@
       type: Object,
       default: () => ({}),
     },
+    modeOptions: {
+      type: Array as PropType<{ label: string; value: string }[]>,
+      default: () => [
+        { label: '系统地图位置', value: 'system' },
+        { label: '自定义位置', value: 'custom' },
+      ],
+    },
+    customLocation: {
+      type: Boolean,
+      default: false,
+    },
+    mode: {
+      type: String,
+      default: 'system',
+    },
   });
   const theEmits = defineEmits([
     'cascader-change',
@@ -165,6 +216,8 @@
     'update:longitude',
     'update:latitude',
     'drag-marker-end',
+    'update:mode',
+    'update:address',
   ]);
 
   const cascaderFilter = (inputValue: string, path: any[]) => {
@@ -178,6 +231,8 @@
     theEmits('cascader-change', newValue, newValueItems);
   };
 
+  const theMode = ref(theProps.mode);
+  const theAddress = shallowRef('');
   const theKeyword = ref('');
   const theCode = ref([]);
   const theCenter = ref<any>([]);
@@ -253,6 +308,14 @@
     }
   };
 
+  const onChangeMode = () => {
+    theEmits('update:mode', theMode.value);
+  };
+
+  const onChangeAddress = () => {
+    theEmits('update:address', theAddress.value);
+  };
+
   const searchMap = (poi: number[]) => {
     if (poi && poi.length > 0) {
       theCenter.value = poi;
@@ -283,12 +346,26 @@
     }
   };
 
+  const updateMode = () => {
+    if (typeof theProps.mode === 'string') {
+      theMode.value = theProps.mode;
+    }
+  };
+  watch(() => theProps.mode, updateMode);
+
   const updateCode = () => {
     if (Array.isArray(theProps.code)) {
       theCode.value = theProps.code as any;
     }
   };
   watch(() => theProps.code, updateCode);
+
+  const updateCustomeAddress = () => {
+    if (typeof theProps.address === 'string') {
+      theAddress.value = theProps.address;
+    }
+  };
+  watch(() => theProps.value, updateCustomeAddress);
 
   const updateKeyword = () => {
     if (typeof theProps.value === 'string') {
@@ -321,6 +398,8 @@
     updateCenter();
     updatePoi();
     updateKeyword();
+    updateCustomeAddress();
+    updateMode();
   });
 </script>
 <style>
@@ -336,6 +415,16 @@
 
   .w-map-search {
     position: relative;
+
+    .ant-input-group {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      .ant-input-group-addon {
+        width: auto;
+      }
+    }
   }
 
   .w-map-search-core {
