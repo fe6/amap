@@ -210,6 +210,7 @@
   const theEmits = defineEmits([
     'cascader-change',
     'update:code',
+    'select-search-change',
     'search-change',
     'search-error',
     'update:value',
@@ -342,6 +343,7 @@
         theEmits('update:value', theKeyword.value);
         theEmits('update:longitude', lng);
         theEmits('update:latitude', lat);
+        theEmits('select-search-change', theKeyword.value, lng, lat);
       }
     }
   };

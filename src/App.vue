@@ -245,6 +245,18 @@
         }
       });
   };
+  const onChangeSelectSearch = (
+    theKeyword: string,
+    theLng: number,
+    theLat: number,
+  ) => {
+    console.log(
+      theKeyword,
+      theLng,
+      theLat,
+      'theKeyword: string, theLng: number, theLat: number',
+    );
+  };
   // 搜索 end
 
   // 矩形 start
@@ -337,6 +349,7 @@
                 :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"
                 :areaData="areaData"
                 :forceRender="renderMap"
+                @select-search-change="onChangeSelectSearch"
               >
               </MapSearch>
             </div>
@@ -510,6 +523,7 @@
         mapId="map9"
         dragPoint
         @drag-marker-end="onDragMarkerEnd"
+        @select-search-change="onChangeSelectSearch"
         map-key="e37740bc1cc102bdc13fe10b02d82de6"
         :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
         :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"
@@ -534,6 +548,7 @@
         :securityConfig="{ securityJsCode: '618328f70209e0ce7566f84258326f5d' }"
         :plugins="['AMap.PlaceSearch', 'AMap.AutoComplete']"
         :areaData="areaData"
+        @select-search-change="onChangeSelectSearch"
       >
       </MapSearch>
     </div>
