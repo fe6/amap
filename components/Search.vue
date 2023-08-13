@@ -234,6 +234,7 @@
 
   const theMode = ref(theProps.mode);
   const theAddress = shallowRef('');
+  const theChangAddress = shallowRef('');
   const theKeyword = ref('');
   const theCode = ref([]);
   const theCenter = ref<any>([]);
@@ -311,6 +312,14 @@
 
   const onChangeMode = () => {
     theEmits('update:mode', theMode.value);
+    if (theMode.value === 'custom' && !theKeyword.value) {
+      theKeyword.value = theChangAddress.value || theProps.value;
+      theEmits('update:value', theKeyword.value);
+    }
+    if (theMode.value === 'system' && !theAddress.value) {
+      theAddress.value = theKeyword.value || theProps.address;
+      theEmits('update:address', theAddress.value);
+    }
   };
 
   const onChangeAddress = () => {
@@ -375,6 +384,15 @@
     }
   };
   watch(() => theProps.value, updateKeyword);
+
+  watch(
+    () => theKeyword.value,
+    () => {
+      if (theKeyword.value) {
+        theChangAddress.value = theKeyword.value;
+      }
+    },
+  );
 
   const updateCenter = () => {
     if (Array.isArray(theProps.center)) {
