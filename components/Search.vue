@@ -288,6 +288,8 @@
 
       theGaodeMap.value.plugin(thePlugins, initSearch);
     }
+    // 修复二次进入的时候点位没有到中心，因为第二次进入有可能地图没有加载
+    updatePoi();
   };
 
   const searchTime = ref<any>(null);
