@@ -69,6 +69,10 @@
 |size|输入框及省市区练级选择器的大小，可选 `large` `default` `small`|string|default| - |
 |autocompleteConfig|<a href="https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.Autocomplete" target="_blank" rel="noreferrer">AMap.AutoComplete</a> 其他配置|object| - | - |
 |placeSearchConfig|<a href="https://lbs.amap.com/api/javascript-api/reference/search#m_AMap.PlaceSearch" target="_blank" rel="noreferrer">AMap.PlaceSearch</a> 其他配置|object| - | - |
+|gaodeAjaxSearch|是否使用高德接口进行搜索查询|boolean|false| 1.0.0 |
+|gaodeAjaxSearchMapKey|高德接口进行搜索查询的专用key|string|-| 1.0.0 |
+|reginInner|省市区选项是否内置请求|boolean|false| 1.0.0 |
+|reginInnerUrl|省市区选项内置请求主域地址|string|-| 1.0.0 |
 
 ## 事件
 
