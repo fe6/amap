@@ -52,3 +52,38 @@ fs.readdir('./components', function (err, files) {
     });
   })(0);
 });
+
+fs.readdir('./components/ajax', function (err, files) {
+  var dirs = [];
+  (function iterator(i) {
+    if (i == files.length) {
+      dirs.forEach((oneDir) => {
+        if (oneDir.indexOf('.d.ts') > -1) {
+          fs.readFile(
+            `./components/ajax/${oneDir}`,
+            { encoding: 'utf8' },
+            (err, data) => {
+              if (err) {
+                console.error(err);
+                return;
+              }
+              writeFiles('./dist/types/ajax', `/${oneDir}`, data, () => {});
+            },
+          );
+        }
+      });
+      dirs.forEach((oneDir) => {
+        if (oneDir.indexOf('.d.ts') > -1) {
+          fs.unlinkSync(`./components/ajax/${oneDir}`);
+        }
+      });
+      return;
+    }
+    fs.stat(path.join('./components/ajax', files[i]), function (err, data) {
+      if (data.isFile()) {
+        dirs.push(files[i]);
+      }
+      iterator(i + 1);
+    });
+  })(0);
+});
