@@ -25,7 +25,8 @@
         <Input
           v-model:value="theApiAddress"
           :size="(size as any)"
-          @change="onApiSearchChange"
+          placeholder="请输入具体位置"
+          @blur="onApiSearchChange"
         />
       </div>
       <div class="w-map-core">
@@ -374,15 +375,15 @@
               theEmits('search-change', theApiCoreResult);
             }
           } else {
-            message.error('未找到地址');
+            message.error('当前城市未找到相关位置');
             theEmits('search-error', theApiResult);
           }
         } else {
-          message.error('未找到地址');
+          message.error('当前城市未找到相关位置');
           theEmits('search-error', theApiResult);
         }
       } else {
-        message.error('未找到地址');
+        message.error('当前城市未找到相关位置');
         theEmits('search-error', theApiResult);
       }
     }
