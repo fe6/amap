@@ -1,4 +1,4 @@
 # 发布
 
-- `yarn changelog` 然后提交
-- `yarn publish`
+- 修改 `package.json` 的版本 然后提交，commit 是 release(publish): XXXX
+- `npm publish`
