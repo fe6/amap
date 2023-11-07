@@ -2,10 +2,10 @@
   "name": "@fe6/amap",
   "version": "0.6.3",
   "engines": {
-    "node": ">= 16.0.0",
-    "pnpm": ">=7.9"
+    "node": ">=16.10.0",
+    "pnpm": ">=8.10.0"
   },
-  "packageManager": "pnpm@7.13.4",
+  "packageManager": "pnpm@8.10.0",
   "description": "Gaud components of vue3",
   "scripts": {
     "start": "vite",
