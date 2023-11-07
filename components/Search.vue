@@ -2,14 +2,75 @@
 
 <template>
   <FormRestItem>
-    <Space class="w-map-space" direction="vertical" :size="(space as any)">
+    <Space
+      class="w-map-space"
+      direction="vertical"
+      :size="(space as any)"
+      v-if="gaodeAjaxSearch"
+    >
+      <Cascader
+        v-model:value="theApiCodes"
+        :field-names="cascaderFieldNames"
+        :options="theInnerRegins"
+        :show-search="{ filter: onCascaderFilter }"
+        :loading="theInnerLoadingRegins"
+        placeholder="请选择"
+        @change="onApiCascaderChange"
+        class="w-map-cascader"
+        :getPopupContainer="cascaderGetPopupContainer"
+        :size="(size as any)"
+        v-if="showCascader"
+      />
+      <div class="w-map-search">
+        <Search
+          v-model:value="theApiAddress"
+          :size="(size as any)"
+          @change="onApiSearchChange"
+          @search="onApiSearchChange"
+        />
+      </div>
+      <div class="w-map-core">
+        <Map
+          :pitchEnable="pitchEnable"
+          :pitch="pitch"
+          :mapId="mapId"
+          :mapKey="mapKey"
+          :securityConfig="securityConfig"
+          :version="version"
+          :plugins="plugins"
+          :zoom="zoom"
+          :zooms="zooms"
+          :center="theApiCenter"
+          :viewMode="viewMode"
+          :dragEnable="dragEnable"
+          :zoomEnable="zoomEnable"
+          :doubleClickZoom="doubleClickZoom"
+          :forceRender="forceRender"
+          v-if="showMap"
+          @inited="mapInited"
+        >
+          <MapMarker
+            :value="theApiCenter"
+            @drag-end="onApiDragedMarker"
+            v-if="theApiCenter.length > 0"
+            :draggable="dragPoint"
+          />
+        </Map>
+      </div>
+    </Space>
+    <Space
+      class="w-map-space"
+      direction="vertical"
+      :size="(space as any)"
+      v-else
+    >
       <Cascader
         v-model:value="theCode"
         :field-names="cascaderFieldNames"
         :options="cascaderOptions"
-        :show-search="{ filter: cascaderFilter }"
+        :show-search="{ filter: onCascaderFilter }"
         placeholder="请选择"
-        @change="cascaderChange"
+        @change="onCascaderChange"
         class="w-map-cascader"
         :getPopupContainer="cascaderGetPopupContainer"
         :size="(size as any)"
@@ -113,6 +174,7 @@
   import Map from './Map.vue';
   import MapMarker from './Marker.vue';
   import { mapProps } from './map-props';
+  import { getGaodeGetPoi, getGaodeSearch, getReginTree } from './ajax/global';
 
   const Search = Input.Search;
   const InputGroup = Input.Group;
@@ -206,6 +268,22 @@
       type: String,
       default: 'system',
     },
+    gaodeAjaxSearch: {
+      type: Boolean,
+      default: false,
+    },
+    gaodeAjaxSearchMapKey: {
+      type: String,
+      default: '',
+    },
+    reginInner: {
+      type: Boolean,
+      default: false,
+    },
+    reginInnerUrl: {
+      type: String,
+      default: '',
+    },
   });
   const theEmits = defineEmits([
     'cascader-change',
@@ -221,16 +299,141 @@
     'update:address',
   ]);
 
-  const cascaderFilter = (inputValue: string, path: any[]) => {
+  const onCascaderFilter = (inputValue: string, path: any[]) => {
     return path.some((option) =>
       option.name.toLowerCase().includes(inputValue.toLowerCase()),
     );
   };
 
-  const cascaderChange = (newValue: any, newValueItems?: any) => {
+  const onCascaderChange = (newValue: any, newValueItems?: any) => {
     theEmits('update:code', newValue);
     theEmits('cascader-change', newValue, newValueItems);
   };
+
+  // 高德搜索 start
+  const theApiCodes = ref<any>([]);
+  const theApiAddress = shallowRef('');
+  const theApiCenter = ref<any>([]);
+  const theApiMap = ref<any>(null);
+  const theApiGaodeMap = ref<any>(null);
+
+  const onGetGaodeBaseParams = () => {
+    return {
+      key: theProps.gaodeAjaxSearchMapKey,
+      platform: 'JS',
+      logversionL: '2.0',
+      sdkversion: '1.4.23',
+    };
+  };
+
+  const onApiEmitAddressAndPoi = () => {
+    theEmits('update:value', theApiAddress.value);
+    theEmits('update:longitude', theApiCenter.value?.[0]);
+    theEmits('update:latitude', theApiCenter.value?.[1]);
+  };
+
+  const onSetApiCenter = (theNewPoi: number[]) => {
+    if (theNewPoi && theNewPoi.length > 0) {
+      theApiCenter.value = theNewPoi.map((theOnePoi) => Number(theOnePoi));
+    }
+  };
+
+  const onApiMoveMapToCenter = (theNewPoi: number[]) => {
+    if (theNewPoi && theNewPoi.length > 0) {
+      onSetApiCenter(theNewPoi);
+      if (theApiMap.value) {
+        theApiMap.value.setCenter(theNewPoi);
+      }
+    }
+  };
+  const onApiGetCodes = (theAdcode: string) => {
+    if (theAdcode && theAdcode?.length > 5) {
+      const theProvinceId = Number(`${theAdcode.substring(0, 2)}0000`);
+      const theCityId = Number(`${theAdcode.substring(0, 4)}00`);
+      theApiCodes.value = [theProvinceId, theCityId, Number(theAdcode)];
+      onCascaderChange(theApiCodes.value, []);
+    }
+  };
+  const onCoreAjaxGaode = async () => {
+    if (theApiAddress.value?.length > 0) {
+      const theBaseGaodeParams = onGetGaodeBaseParams();
+      const theApiResult = await getGaodeSearch({
+        address: theApiAddress.value,
+        city: theApiCodes.value?.length > 2 ? theApiCodes.value[1] : '',
+        ...theBaseGaodeParams,
+      });
+      if (theApiResult.status === 200) {
+        const theApiCoreResult = theApiResult.data;
+        if (theApiCoreResult.infocode === '10000') {
+          const theApiGeoOneCode = theApiCoreResult?.geocodes?.[0];
+          if (theApiGeoOneCode && theApiGeoOneCode?.location) {
+            const thePois = theApiGeoOneCode?.location?.split?.(',');
+            if (thePois?.length > 1) {
+              onApiMoveMapToCenter(thePois);
+              onApiEmitAddressAndPoi();
+              onApiGetCodes(theApiGeoOneCode?.adcode || '');
+              theEmits('search-change', theApiCoreResult);
+            }
+          } else {
+            theEmits('search-error', theApiResult);
+          }
+        } else {
+          theEmits('search-error', theApiResult);
+        }
+      } else {
+        theEmits('search-error', theApiResult);
+      }
+    }
+  };
+
+  const onApiCascaderChange = async (newValue: any, newValueItems?: any) => {
+    await onCoreAjaxGaode();
+    onCascaderChange(newValue, newValueItems);
+  };
+
+  const theApiSearchTime = ref<any>(null);
+  const onApiSearchChange = () => {
+    clearTimeout(theApiSearchTime.value);
+    theApiSearchTime.value = setTimeout(onCoreAjaxGaode, 300);
+  };
+
+  const onWatchApiValue = () => {
+    theApiAddress.value = theProps.value;
+  };
+
+  const onWatchApiCodes = () => {
+    if (theInnerRegins.value.length > 0) {
+      theApiCodes.value = theProps.code;
+    }
+  };
+
+  // 拖拽点位之后
+  const onApiDragedMarker = async (theNewPoi: number[]) => {
+    if (theNewPoi.length > 1) {
+      const theBaseGaodeParams = onGetGaodeBaseParams();
+      const thePoiResult = await getGaodeGetPoi({
+        location: theNewPoi.join(','),
+        ...theBaseGaodeParams,
+      });
+
+      if (thePoiResult.status === 200) {
+        const theApiDragCoreResult = thePoiResult.data;
+        if (theApiDragCoreResult.infocode === '10000') {
+          const theApiDragGeoComponent =
+            theApiDragCoreResult?.regeocode?.addressComponent;
+          if (theApiDragGeoComponent) {
+            theApiAddress.value =
+              theApiDragCoreResult?.regeocode?.formatted_address;
+            onSetApiCenter(theNewPoi);
+            onApiEmitAddressAndPoi();
+            onApiGetCodes(theApiDragGeoComponent?.adcode || '');
+            theEmits('search-change', theApiDragCoreResult);
+          }
+        }
+      }
+    }
+  };
+  // 高德搜索 end
 
   const theMode = ref(theProps.mode);
   const theAddress = shallowRef('');
@@ -267,29 +470,33 @@
   const mapInited = (map: Record<any, any>, gaodeMap: Record<any, any>) => {
     theMap.value = map.value;
     theGaodeMap.value = gaodeMap.value;
-    if (typeof theGaodeMap.value.Autocomplete === 'function') {
-      if (theGaodeMap.value.Geocoder) {
-        initSearch();
-      } else {
-        if (theProps.dragPoint) {
-          theGaodeMap.value.plugin(['AMap.Geocoder'], initSearch);
-        } else {
+    theApiMap.value = map.value;
+    theApiGaodeMap.value = gaodeMap.value;
+    if (!theProps.gaodeAjaxSearch) {
+      if (typeof theGaodeMap.value.Autocomplete === 'function') {
+        if (theGaodeMap.value.Geocoder) {
           initSearch();
+        } else {
+          if (theProps.dragPoint) {
+            theGaodeMap.value.plugin(['AMap.Geocoder'], initSearch);
+          } else {
+            initSearch();
+          }
         }
-      }
-    } else {
-      // FIX 如果没引入插件
-      // 复现： 从其他普通地图跳转过来
-      const thePlugins = ['AMap.PlaceSearch', 'AMap.AutoComplete'];
+      } else {
+        // FIX 如果没引入插件
+        // 复现： 从其他普通地图跳转过来
+        const thePlugins = ['AMap.PlaceSearch', 'AMap.AutoComplete'];
 
-      if (theProps.dragPoint) {
-        thePlugins.push('AMap.Geocoder');
-      }
+        if (theProps.dragPoint) {
+          thePlugins.push('AMap.Geocoder');
+        }
 
-      theGaodeMap.value.plugin(thePlugins, initSearch);
+        theGaodeMap.value.plugin(thePlugins, initSearch);
+      }
     }
     // 修复二次进入的时候点位没有到中心，因为第二次进入有可能地图没有加载
-    updatePoi();
+    onUpdatePoi();
   };
 
   const searchTime = ref<any>(null);
@@ -344,7 +551,7 @@
       theProps.areaData[tip.adcode] &&
       theProps.areaData[tip.adcode].addressCode
     ) {
-      cascaderChange(theProps.areaData[tip.adcode].addressCode);
+      onCascaderChange(theProps.areaData[tip.adcode].addressCode);
     }
     theTips.value = [];
     if (tip.location) {
@@ -367,22 +574,29 @@
   watch(() => theProps.mode, updateMode);
 
   const updateCode = () => {
-    if (Array.isArray(theProps.code)) {
+    if (Array.isArray(theProps.code) && theProps.gaodeAjaxSearch) {
+      onWatchApiCodes();
+    }
+    if (Array.isArray(theProps.code) && !theProps.gaodeAjaxSearch) {
       theCode.value = theProps.code as any;
     }
   };
   watch(() => theProps.code, updateCode);
 
   const updateCustomeAddress = () => {
-    if (typeof theProps.address === 'string') {
+    if (typeof theProps.address === 'string' && !theProps.gaodeAjaxSearch) {
       theAddress.value = theProps.address;
     }
   };
   watch(() => theProps.value, updateCustomeAddress);
 
   const updateKeyword = () => {
-    if (typeof theProps.value === 'string') {
-      theKeyword.value = theProps.value;
+    if (theProps.gaodeAjaxSearch) {
+      onWatchApiValue();
+    } else {
+      if (typeof theProps.value === 'string') {
+        theKeyword.value = theProps.value;
+      }
     }
   };
   watch(() => theProps.value, updateKeyword);
@@ -390,7 +604,7 @@
   watch(
     () => theKeyword.value,
     () => {
-      if (theKeyword.value) {
+      if (theKeyword.value && !theProps.gaodeAjaxSearch) {
         theChangAddress.value = theKeyword.value;
       }
     },
@@ -403,25 +617,58 @@
   };
   watch(() => theProps.center, updateCenter);
 
-  const updatePoi = () => {
+  const onUpdatePoi = () => {
     if (theProps.longitude && theProps.latitude) {
-      searchMap([Number(theProps.longitude), Number(theProps.latitude)]);
+      if (theProps.gaodeAjaxSearch) {
+        onApiMoveMapToCenter([
+          Number(theProps.longitude),
+          Number(theProps.latitude),
+        ]);
+      } else {
+        searchMap([Number(theProps.longitude), Number(theProps.latitude)]);
+      }
     }
   };
-  watch([() => theProps.longitude, () => theProps.latitude], updatePoi);
+  watch([() => theProps.longitude, () => theProps.latitude], onUpdatePoi);
 
   // 拖拽点位之后
   const onDragedMarker = (theNewPoi: number[]) => {
     theEmits('drag-marker-end', theNewPoi, theGeocoder);
   };
 
-  onMounted(() => {
-    updateCode();
-    updateCenter();
-    updatePoi();
-    updateKeyword();
-    updateCustomeAddress();
-    updateMode();
+  // 默认获取三级地域
+  const theInnerRegins = ref<any>([]);
+  const theInnerLoadingRegins = shallowRef(false);
+  // 按三级 code 为 key 查找 省市 的 code ，因为高德地图接口 adcode 一定返回
+  // const theInnerMapRegins = ref<any>({});
+  const onGetRegions = async () => {
+    if (!theInnerLoadingRegins.value) {
+      try {
+        theInnerLoadingRegins.value = true;
+        theInnerRegins.value = await getReginTree(theProps.reginInnerUrl);
+        onWatchApiCodes();
+        theInnerLoadingRegins.value = false;
+      } catch (error) {
+        theInnerLoadingRegins.value = false;
+      }
+    }
+  };
+
+  onMounted(async () => {
+    if (theProps.gaodeAjaxSearch) {
+      if (theProps.reginInner) {
+        await onGetRegions();
+        onWatchApiValue();
+        onUpdatePoi();
+      }
+    } else {
+      updateCode();
+      updateCenter();
+      onUpdatePoi();
+      updateKeyword();
+      updateCustomeAddress();
+      updateMode();
+    }
   });
 </script>
 <style>
