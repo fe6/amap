@@ -22,11 +22,10 @@
         v-if="showCascader"
       />
       <div class="w-map-search">
-        <Search
+        <Input
           v-model:value="theApiAddress"
           :size="(size as any)"
           @change="onApiSearchChange"
-          @search="onApiSearchChange"
         />
       </div>
       <div class="w-map-core">
@@ -375,12 +374,15 @@
               theEmits('search-change', theApiCoreResult);
             }
           } else {
+            message.error('未找到地址');
             theEmits('search-error', theApiResult);
           }
         } else {
+          message.error('未找到地址');
           theEmits('search-error', theApiResult);
         }
       } else {
+        message.error('未找到地址');
         theEmits('search-error', theApiResult);
       }
     }
@@ -421,9 +423,14 @@
         if (theApiDragCoreResult.infocode === '10000') {
           const theApiDragGeoComponent =
             theApiDragCoreResult?.regeocode?.addressComponent;
+          const { province, city, district } = theApiDragGeoComponent;
           if (theApiDragGeoComponent) {
-            theApiAddress.value =
+            let theApiGaodeAddress =
               theApiDragCoreResult?.regeocode?.formatted_address;
+            theApiGaodeAddress = theApiGaodeAddress.replace(province, '');
+            theApiGaodeAddress = theApiGaodeAddress.replace(city, '');
+            theApiGaodeAddress = theApiGaodeAddress.replace(district, '');
+            theApiAddress.value = theApiGaodeAddress;
             onSetApiCenter(theNewPoi);
             onApiEmitAddressAndPoi();
             onApiGetCodes(theApiDragGeoComponent?.adcode || '');
