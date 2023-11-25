@@ -284,6 +284,10 @@
       type: String,
       default: '',
     },
+    reginInnerPath: {
+      type: String,
+      default: 'common/lbs/regin/tree',
+    },
   });
   const theEmits = defineEmits([
     'cascader-change',
@@ -653,7 +657,10 @@
     if (!theInnerLoadingRegins.value) {
       try {
         theInnerLoadingRegins.value = true;
-        theInnerRegins.value = await getReginTree(theProps.reginInnerUrl);
+        theInnerRegins.value = await getReginTree(
+          theProps.reginInnerUrl,
+          theProps.reginInnerPath,
+        );
         onWatchApiCodes();
         theInnerLoadingRegins.value = false;
       } catch (error) {

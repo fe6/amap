@@ -3,14 +3,10 @@
 import axios from 'axios';
 import { onDefHttp } from './http';
 
-enum API {
-  URL_REGIN = 'common/lbs/regin/tree',
-}
-
 // 获取全量三级地域数据
-export function getReginTree(theApiUrl: string) {
+export function getReginTree(theApiUrl: string, theReginInnerPath: string) {
   return onDefHttp(theApiUrl).request({
-    url: API.URL_REGIN,
+    url: theReginInnerPath,
     method: 'GET',
   });
 }
