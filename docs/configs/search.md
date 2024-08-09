@@ -73,6 +73,7 @@
 |gaodeAjaxSearchMapKey|高德接口进行搜索查询的专用key|string|-| 1.0.0 |
 |reginInner|省市区选项是否内置请求|boolean|false| 1.0.0 |
 |reginInnerUrl|省市区选项内置请求主域地址|string|-| 1.0.0 |
+|disabled|禁用所有操作|boolean|-| 1.1.0 |
 
 ## 事件
 

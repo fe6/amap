@@ -14,6 +14,7 @@
         :options="theInnerRegins"
         :show-search="{ filter: onCascaderFilter }"
         :loading="theInnerLoadingRegins"
+        :disabled="disabled"
         placeholder="请选择"
         @change="onApiCascaderChange"
         class="w-map-cascader"
@@ -25,6 +26,7 @@
         <Input
           v-model:value="theApiAddress"
           :size="(size as any)"
+          :disabled="disabled"
           placeholder="请输入具体位置"
           @blur="onApiSearchChange"
         />
@@ -42,8 +44,8 @@
           :zooms="zooms"
           :center="theApiCenter"
           :viewMode="viewMode"
-          :dragEnable="dragEnable"
-          :zoomEnable="zoomEnable"
+          :dragEnable="dragEnable && !disabled"
+          :zoomEnable="zoomEnable && !disabled"
           :doubleClickZoom="doubleClickZoom"
           :forceRender="forceRender"
           v-if="showMap"
@@ -69,6 +71,7 @@
         :field-names="cascaderFieldNames"
         :options="cascaderOptions"
         :show-search="{ filter: onCascaderFilter }"
+        :disabled="disabled"
         placeholder="请选择"
         @change="onCascaderChange"
         class="w-map-cascader"
@@ -80,13 +83,18 @@
         <template v-if="!customLocation">
           <Search
             v-model:value="theKeyword"
+            :disabled="disabled"
             :size="(size as any)"
             @change="searchChange"
           />
         </template>
         <template v-else>
           <InputGroup>
-            <Select v-model:value="theMode" @change="onChangeMode">
+            <Select
+              v-model:value="theMode"
+              :disabled="disabled"
+              @change="onChangeMode"
+            >
               <SelectOption
                 v-for="theModeItem in modeOptions"
                 :key="theModeItem.value"
@@ -99,11 +107,13 @@
             <Search
               v-model:value="theKeyword"
               :size="(size as any)"
+              :disabled="disabled"
               @change="searchChange"
               v-if="theMode === 'system'"
             />
             <InputText
               v-model:value="theAddress"
+              :disabled="disabled"
               @blur="onChangeAddress"
               v-else
             />
@@ -139,8 +149,8 @@
           :zooms="zooms"
           :center="theCenter"
           :viewMode="viewMode"
-          :dragEnable="dragEnable"
-          :zoomEnable="zoomEnable"
+          :dragEnable="dragEnable && !disabled"
+          :zoomEnable="zoomEnable && !disabled"
           :doubleClickZoom="doubleClickZoom"
           :forceRender="forceRender"
           v-if="showMap"

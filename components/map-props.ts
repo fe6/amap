@@ -45,6 +45,10 @@ export const mapProps = {
     type: Boolean,
     default: true,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
   dragEnable: {
     type: Boolean,
     default: true,
