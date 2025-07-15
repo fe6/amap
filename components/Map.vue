@@ -106,12 +106,15 @@
     }
     if (theProps.mapKey && theProps.forceRender) {
       try {
-        await loadMap({
-          mapKey: theProps.mapKey,
-          version: theProps.version,
-          securityConfig: theProps.securityConfig as any,
-          plugins: theProps.plugins,
-        });
+        await loadMap(
+          {
+            mapKey: theProps.mapKey,
+            version: theProps.version,
+            securityConfig: theProps.securityConfig as any,
+            plugins: theProps.plugins,
+          },
+          theProps.timeout,
+        );
       } catch (error) {
         theEmits('init-error', error);
       }

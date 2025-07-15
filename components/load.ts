@@ -13,22 +13,28 @@ export interface ILoadMap {
   version?: string;
 }
 
-export const loadMap = (params: ILoadMap) => {
+export const loadMap = (params: ILoadMap, timeout = 8000): Promise<any> => {
   if (!theWindow._AMapSecurityConfig) {
     theWindow._AMapSecurityConfig = params.securityConfig;
   }
-  return new Promise((resolve, reject) => {
-    AMapLoader.load({
-      key: params.mapKey, // 申请好的Web端开发者Key，首次调用 load 时必填
-      version: params.version || '2.0', // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
-      plugins: params.plugins, // 需要使用的的插件列表，如比例尺'AMap.Scale'等
-    })
-      .then((AMap: Record<any, any>) => {
-        theLoadAMap.value = AMap;
-        resolve(AMap);
-      })
-      .catch((e) => {
-        reject(e);
-      });
+
+  let timeoutId: ReturnType<typeof setTimeout>;
+
+  const loadPromise = AMapLoader.load({
+    key: params.mapKey,
+    version: params.version || '2.0',
+    plugins: params.plugins || [],
+  }).then((AMap: Record<any, any>) => {
+    clearTimeout(timeoutId); // ✅ 清除超时定时器
+    theLoadAMap.value = AMap;
+    return AMap;
   });
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error('高德地图：AMap 加载超时（可能是 key 无效或网络异常）'));
+    }, timeout);
+  });
+
+  return Promise.race([loadPromise, timeoutPromise]);
 };

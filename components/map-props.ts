@@ -85,4 +85,9 @@ export const mapProps = {
     type: Boolean,
     default: true,
   },
+  // 超时提醒 默认8秒
+  timeout: {
+    type: Number,
+    default: 8000,
+  },
 };

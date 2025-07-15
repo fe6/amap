@@ -49,7 +49,9 @@
           :doubleClickZoom="doubleClickZoom"
           :forceRender="forceRender"
           v-if="showMap"
+          :timeout="timeout"
           @inited="mapInited"
+          @init-error="mapInitError"
         >
           <MapMarker
             :value="theApiCenter"
@@ -84,6 +86,7 @@
           <Search
             v-model:value="theKeyword"
             :disabled="disabled"
+            placeholder="请输入具体位置"
             :size="(size as any)"
             @change="searchChange"
           />
@@ -154,7 +157,9 @@
           :doubleClickZoom="doubleClickZoom"
           :forceRender="forceRender"
           v-if="showMap"
+          :timeout="timeout"
           @inited="mapInited"
+          @init-error="mapInitError"
         >
           <MapMarker
             :value="theCenter"
@@ -298,6 +303,10 @@
       type: String,
       default: 'common/lbs/regin/tree',
     },
+    timeout: {
+      type: Number,
+      default: 8000,
+    },
   });
   const theEmits = defineEmits([
     'cascader-change',
@@ -311,6 +320,8 @@
     'drag-marker-end',
     'update:mode',
     'update:address',
+    'inited',
+    'init-error',
   ]);
 
   const onCascaderFilter = (inputValue: string, path: any[]) => {
@@ -519,6 +530,13 @@
     }
     // 修复二次进入的时候点位没有到中心，因为第二次进入有可能地图没有加载
     onUpdatePoi();
+
+    // 初始化完成
+    theEmits('inited', true);
+  };
+
+  const mapInitError = (error: any) => {
+    theEmits('init-error', error);
   };
 
   const searchTime = ref<any>(null);
