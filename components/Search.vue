@@ -86,9 +86,9 @@
           <Search
             v-model:value="theKeyword"
             :disabled="disabled"
-            placeholder="请输入具体位置"
+            placeholder="请输入具体位置，然后点“搜索”查询"
             :size="(size as any)"
-            @change="searchChange"
+            @search="searchChange"
           />
         </template>
         <template v-else>
